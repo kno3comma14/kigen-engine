@@ -1,12 +1,12 @@
 (ns kigen-engine-beginnings.core
   (:gen-class)
-  (:require [kigen-engine-beginnings.kigen.window :as w])
+  (:require [kigen-engine-beginnings.kigen.window :as w]
+            [nrepl.server :refer [start-server stop-server]])
   (:import (org.lwjgl Version)
            (org.lwjgl.glfw GLFWErrorCallback GLFW GLFWKeyCallbackI Callbacks)
            (org.lwjgl.opengl GL GL33)
            (org.lwjgl.system MemoryStack)))
 
-(require '[nrepl.server :refer [start-server stop-server]])
 (defonce server (start-server :port 7888))
 
 (declare window)
