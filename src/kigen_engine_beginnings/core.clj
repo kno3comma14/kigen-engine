@@ -1,5 +1,6 @@
 (ns kigen-engine-beginnings.core
   (:gen-class)
+  (:require [kigen-engine-beginnings.kigen.window :as w])
   (:import (org.lwjgl Version)
            (org.lwjgl.glfw GLFWErrorCallback GLFW GLFWKeyCallbackI Callbacks)
            (org.lwjgl.opengl GL GL33)
@@ -42,9 +43,7 @@
   (GLFW/glfwWindowHint GLFW/GLFW_RESIZABLE GLFW/GLFW_TRUE)  ; the window will be resizable
 
   ; Create the window
-  (def window (GLFW/glfwCreateWindow 300 300 "Sup!" 0 0))
-  (when (zero? window)
-    (throw (RuntimeException. "Failed to create the GLFW window")))
+  (def window (w/create-window 300 300 "Sup!!!" 0 0))
 
   ; Setup a key callback. It will be called every time a key is pressed, repeated or released.
   (GLFW/glfwSetKeyCallback window (reify GLFWKeyCallbackI
