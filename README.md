@@ -8,6 +8,8 @@ Download from http://example.com/FIXME.
 
 ## Usage
 
+- Use ```lein with-profile <platform-name> <command-to-run>```
+
 FIXME: explanation
 
     $ java -jar kigen-engine-beginnings-0.1.0-standalone.jar [args]
