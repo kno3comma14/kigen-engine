@@ -1,5 +1,5 @@
 (ns kigen-engine-beginnings.kigen.window
-  (:import (org.lwjgl.glfw GLFW GLFWErrorCallback)
+  (:import (org.lwjgl.glfw GLFW GLFWErrorCallback Callbacks)
            (org.lwjgl.opengl GL GL33))
   (:require [taoensso.timbre :as timbre :refer [warn]]))
 
@@ -17,7 +17,7 @@
 (defn provide-window
   []
   (if (nil? @_window-entity)
-    (throw (RuntimeException. "Failed to create the GLFW window"))
+    (throw (RuntimeException. "You need to create a GLFW window first"))
     @_window-entity))
 
 (defn- init
@@ -48,7 +48,7 @@
   ; invoked during this call.
   (GLFW/glfwPollEvents))
 
-(defn- loop
+(defn- game-loop
   []
   (while (not (GLFW/glfwWindowShouldClose @_window-entity))
     (draw)))
@@ -56,6 +56,11 @@
 (defn run
   [width height title]
   (init width height title)
-  (loop))
+  (game-loop)
+  (let [window (provide-window)]
+    (Callbacks/glfwFreeCallbacks window)
+    (GLFW/glfwDestroyWindow window)
+    (GLFW/glfwTerminate)
+    (-> (GLFW/glfwSetErrorCallback nil) (.free))))
 
 
