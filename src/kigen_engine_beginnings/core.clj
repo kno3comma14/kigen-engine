@@ -43,13 +43,14 @@
   (GLFW/glfwWindowHint GLFW/GLFW_RESIZABLE GLFW/GLFW_TRUE)  ; the window will be resizable
 
   ; Create the window
-  (def window (w/create-window 300 300 "Sup!!!" 0 0))
+  (w/create-window 300 300 "Sup!!!" 0 0)
+  (def window (w/provide-window))
 
   ; Setup a key callback. It will be called every time a key is pressed, repeated or released.
   (GLFW/glfwSetKeyCallback window (reify GLFWKeyCallbackI
                                     (invoke [this window key scancode action mods]
                                       (when (and (= key GLFW/GLFW_KEY_ESCAPE)
-                                               (= action GLFW/GLFW_RELEASE))
+                                                 (= action GLFW/GLFW_RELEASE))
                                         ; We will detect this in the rendering loop
                                         (GLFW/glfwSetWindowShouldClose window true)))))
 
