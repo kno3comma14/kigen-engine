@@ -1,6 +1,8 @@
 /target
 /classes
 /checkouts
+/.clj-kondo
+/.lsp
 profiles.clj
 pom.xml
 pom.xml.asc
