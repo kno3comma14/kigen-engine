@@ -1,3 +1,3 @@
-(ns kigen-engine-beginnings.kigen.input-event-listener)
+(ns kigengames.kigen-engine.input-event-listener)
 
 ;; TODO High level abstraction over input event listener

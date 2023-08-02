@@ -1,4 +1,4 @@
-(ns kigen-engine-beginnings.kigen.keyboard-input-event-listener
+(ns kigengames.kigen-engine.keyboard-input-event-listener
   (:import (org.lwjgl.glfw GLFW GLFWKeyCallbackI)))
 
 (defonce key-listener (atom nil))
