@@ -86,12 +86,6 @@
         scroll-x (:scroll-x ml)]
     scroll-x))
 
-(defn get-scroll-y
-  []
-  (let [ml (provide-listener)
-        scroll-y (:scroll-y ml)]
-    scroll-y))
-
 (defn dragging?
   []
   (let [ml (provide-listener)]
