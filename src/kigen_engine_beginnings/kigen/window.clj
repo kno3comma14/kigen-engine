@@ -2,7 +2,8 @@
   (:import (org.lwjgl.glfw GLFW GLFWErrorCallback Callbacks)
            (org.lwjgl.opengl GL GL33))
   (:require [taoensso.timbre :as timbre :refer [warn]]
-            [kigen-engine-beginnings.kigen.keyboard-input-event-listener :as kl]))
+            [kigen-engine-beginnings.kigen.keyboard-input-event-listener :as kl]
+            [kigen-engine-beginnings.kigen.mouse-input-event-listener :as ml]))
 
 (defonce _window-entity (atom nil))
 
@@ -35,7 +36,11 @@
   (GLFW/glfwShowWindow @_window-entity)
   (GL/createCapabilities)
   (kl/init)
-  (GLFW/glfwSetKeyCallback @_window-entity kl/process-key-callback))
+  (ml/init)
+  (GLFW/glfwSetKeyCallback @_window-entity kl/process-key-callback)
+  (GLFW/glfwSetMouseButtonCallback @_window-entity ml/mouse-button-callback)
+  (GLFW/glfwSetCursorPosCallback @_window-entity ml/mouse-position-callback)
+  (GLFW/glfwSetScrollCallback @_window-entity ml/mouse-scroll-callback))
 
 (defn- draw []
 
@@ -54,9 +59,6 @@
 (defn- game-loop
   []
   (while (not (GLFW/glfwWindowShouldClose @_window-entity))
-    (cond 
-      (kl/is-key-pressed GLFW/GLFW_KEY_ESCAPE) (prn "ESCAPE PRESSED")
-      (kl/is-key-pressed GLFW/GLFW_KEY_ENTER) (prn "ENTER PRESSED"))
     (draw)))
 
 (defn run
