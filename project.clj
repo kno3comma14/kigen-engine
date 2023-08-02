@@ -12,8 +12,21 @@
              :shared {:dependencies [[org.lwjgl/lwjgl "3.3.2"]
                                      [org.lwjgl/lwjgl-opengl "3.3.2"]
                                      [org.lwjgl/lwjgl-glfw "3.3.2"]]}
+             ;; macos-arm64 support
              :natives-macos-arm64 {:dependencies [[org.lwjgl/lwjgl "3.3.2" :classifier "natives-macos-arm64"]
                                                   [org.lwjgl/lwjgl-opengl "3.3.2" :classifier "natives-macos-arm64"]
                                                   [org.lwjgl/lwjgl-glfw "3.3.2" :classifier "natives-macos-arm64"]]
                                    :jvm-opts ["-XstartOnFirstThread"]}
-             :macos-arm64 [:shared :natives-macos-arm64]})
+             :macos-arm64 [:shared :natives-macos-arm64]
+             ;; windows-x86 support
+             :natives-windows-x86 {:dependencies [[org.lwjgl/lwjgl "3.3.2" :classifier "natives-windows-x86"]
+                                                  [org.lwjgl/lwjgl-opengl "3.3.2" :classifier "natives-windows-x86"]
+                                                  [org.lwjgl/lwjgl-glfw "3.3.2" :classifier "natives-windows-x86"]]
+                                   :jvm-opts ["-XstartOnFirstThread"]}
+             :windows-x86 [:shared :natives-windows-x86]
+             ;; windows-amd64 support 
+             :natives-windows-amd64 {:dependencies [[org.lwjgl/lwjgl "3.3.2" :classifier "natives-windows"]
+                                                  [org.lwjgl/lwjgl-opengl "3.3.2" :classifier "natives-windows"]
+                                                  [org.lwjgl/lwjgl-glfw "3.3.2" :classifier "natives-windows"]]
+                                   :jvm-opts ["-XstartOnFirstThread"]}
+             :windows-amd64 [:shared :natives-windows-amd64]})
