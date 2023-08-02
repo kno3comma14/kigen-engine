@@ -1,5 +1,8 @@
 (ns kigen-engine-beginnings.kigen.mouse-input-event-listener
-  (:import (org.lwjgl.glfw GLFW GLFWKeyCallbackI)))
+  (:import (org.lwjgl.glfw GLFW 
+                           GLFWCursorPosCallbackI 
+                           GLFWScrollCallbackI 
+                           GLFWMouseButtonCallbackI)))
 
 (defonce mouse-listener (atom nil))
 
@@ -21,7 +24,7 @@
     (@mouse-listener)))
 
 (def mouse-position-callback
-  (reify GLFWKeyCallbackI
+  (reify GLFWCursorPosCallbackI
     (invoke [this window x-pos y-pos]
       (let [updated-map {:last-x (:last-x @mouse-listener)
                          :last-y (:last-y @mouse-listener)
@@ -31,11 +34,14 @@
         (reset! mouse-listener (@mouse-listener updated-map))))))
 
 (def mouse-scroll-callback
-  (reify GLFWKeyCallbackI
+  (reify GLFWScrollCallbackI
     (invoke [this window x-offset y-offset]
       (let [updated-map {:scroll-x x-offset
                          :scroll-y y-offset}]
         (reset! mouse-listener (@mouse-listener updated-map))))))
+
+(def mouse-button-callback
+  (reify GLFWMouseButtonCallbackI))
 
 
 
