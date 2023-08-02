@@ -1,4 +1,4 @@
-(ns kigen-engine-beginnings.kigen.scene)
+(ns kigengames.kigen-engine.scene)
 
 (defprotocol SceneP
  (process [this dt]))

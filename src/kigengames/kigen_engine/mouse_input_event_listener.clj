@@ -1,4 +1,4 @@
-(ns kigen-engine-beginnings.kigen.mouse-input-event-listener
+(ns kigengames.kigen-engine.mouse-input-event-listener
   (:import (org.lwjgl.glfw GLFW
                            GLFWCursorPosCallbackI
                            GLFWScrollCallbackI

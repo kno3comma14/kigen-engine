@@ -1,4 +1,4 @@
-(ns kigen-engine-beginnings.kigen.util.time)
+(ns kigengames.kigen-engine.util.time)
 
 (def nanotime-value 1E9)
 (def start-time (System/nanoTime))
