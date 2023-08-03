@@ -53,7 +53,7 @@
   (GLFW/glfwSetCursorPosCallback @_window-entity ml/mouse-position-callback)
   (GLFW/glfwSetScrollCallback @_window-entity ml/mouse-scroll-callback))
 
-(defn- draw [] 
+(defn- draw []
   (GL33/glClearColor 1.0 0.0 0.0 0.0)
 
   ; clear the framebuffer
