@@ -28,8 +28,9 @@
     @_window-entity))
 
 (defn change-scene
-  [scene]
-  (reset! current-scene scene))
+  [input-scene]
+  (reset! current-scene input-scene)
+  (scene/init @current-scene))
 
 (defn- init
   [width height title initial-scene]
