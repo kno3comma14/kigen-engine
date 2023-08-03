@@ -1,18 +1,21 @@
-# kigen-engine-beginnings
+# Kigen Engine
 
-FIXME: description
+Kigen is a game engine based on [lwjgl](https://www.lwjgl.org/) written in Clojure.
+
 
 ## Installation
 
-Download from http://example.com/FIXME.
+FIXME:
 
 ## Usage
 
-- Use ```lein with-profile <platform-name> <command-to-run>```
+Use ```lein with-profile <platform-name> <command-to-run>```. For example, to run the project in macos I use:
 
-FIXME: explanation
+```Bash
+lein with-profile macos-arm64 run
+```
 
-    $ java -jar kigen-engine-beginnings-0.1.0-standalone.jar [args]
+Note: The framework has only support for macos-arm64 at the moment. The support for other platforms is coming soon.
 
 ## Options
 
