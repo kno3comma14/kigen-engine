@@ -21,12 +21,10 @@
              ;; windows-x86 support
              :natives-windows-x86 {:dependencies [[org.lwjgl/lwjgl "3.3.2" :classifier "natives-windows-x86"]
                                                   [org.lwjgl/lwjgl-opengl "3.3.2" :classifier "natives-windows-x86"]
-                                                  [org.lwjgl/lwjgl-glfw "3.3.2" :classifier "natives-windows-x86"]]
-                                   :jvm-opts ["-XstartOnFirstThread"]}
+                                                  [org.lwjgl/lwjgl-glfw "3.3.2" :classifier "natives-windows-x86"]]}
              :windows-x86 [:shared :natives-windows-x86]
              ;; windows-amd64 support 
              :natives-windows-amd64 {:dependencies [[org.lwjgl/lwjgl "3.3.2" :classifier "natives-windows"]
                                                   [org.lwjgl/lwjgl-opengl "3.3.2" :classifier "natives-windows"]
-                                                  [org.lwjgl/lwjgl-glfw "3.3.2" :classifier "natives-windows"]]
-                                   :jvm-opts ["-XstartOnFirstThread"]}
+                                                  [org.lwjgl/lwjgl-glfw "3.3.2" :classifier "natives-windows"]]}
              :windows-amd64 [:shared :natives-windows-amd64]})
