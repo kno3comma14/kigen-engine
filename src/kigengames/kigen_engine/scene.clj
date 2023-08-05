@@ -4,7 +4,13 @@
   (init [this])
   (process [this dt]))
 
-(defrecord Scene [id name init-fn process-fn]
+(defrecord Scene [id name init-fn process-fn camera]
   SceneP
-  (init [_] (init-fn))
-  (process [_ dt] (process-fn dt)))
+  (init 
+    [_] 
+    (.init @camera)
+    (init-fn))
+  (process 
+    [_ dt] 
+    (reset! camera (.update-position @camera (:position @camera) dt))
+    (process-fn dt)))
