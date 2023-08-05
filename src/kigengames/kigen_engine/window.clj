@@ -1,6 +1,6 @@
 (ns kigengames.kigen-engine.window
   (:import (org.lwjgl.glfw GLFW GLFWErrorCallback Callbacks)
-           (org.lwjgl.opengl GL GL33))
+           (org.lwjgl.opengl GL GL46))
   (:require [taoensso.timbre :as timbre :refer [warn]]
             [kigengames.kigen-engine.keyboard-input-event-listener :as kl]
             [kigengames.kigen-engine.mouse-input-event-listener :as ml]
@@ -40,31 +40,35 @@
   (GLFW/glfwDefaultWindowHints)
   (GLFW/glfwWindowHint GLFW/GLFW_VISIBLE GLFW/GLFW_FALSE)
   (GLFW/glfwWindowHint GLFW/GLFW_RESIZABLE GLFW/GLFW_TRUE)
-  ;;(GLFW/glfwWindowHint GLFW/GLFW_MAXIMIZED GLFW/GLFW_TRUE)
+  (GLFW/glfwWindowHint GLFW/GLFW_CONTEXT_VERSION_MAJOR 3)
+  (GLFW/glfwWindowHint GLFW/GLFW_CONTEXT_VERSION_MINOR 3)
+  (GLFW/glfwWindowHint GLFW/GLFW_OPENGL_FORWARD_COMPAT GLFW/GLFW_TRUE)
+  (GLFW/glfwWindowHint GLFW/GLFW_OPENGL_PROFILE GLFW/GLFW_OPENGL_CORE_PROFILE)
+  (GLFW/glfwWindowHint GLFW/GLFW_MAXIMIZED GLFW/GLFW_TRUE)
   (create-window width height title)
   (GLFW/glfwMakeContextCurrent @_window-entity)
+  (GLFW/glfwSwapInterval 1)
   (GLFW/glfwShowWindow @_window-entity)
   (GL/createCapabilities)
   (change-scene initial-scene)
   (kl/init)
   (ml/init)
+
   (GLFW/glfwSetKeyCallback @_window-entity kl/process-key-callback)
   (GLFW/glfwSetMouseButtonCallback @_window-entity ml/mouse-button-callback)
   (GLFW/glfwSetCursorPosCallback @_window-entity ml/mouse-position-callback)
   (GLFW/glfwSetScrollCallback @_window-entity ml/mouse-scroll-callback))
 
-(defn- draw []
-  (GL33/glClearColor 1.0 0.0 0.0 0.0)
+(defn- draw [dt]
+  (GLFW/glfwPollEvents)
+  (GL46/glClearColor 0.0 0.0 0.0 0.0)
 
-  ; clear the framebuffer
-  (GL33/glClear (bit-or GL33/GL_COLOR_BUFFER_BIT GL33/GL_DEPTH_BUFFER_BIT))
+  (GL46/glClear (bit-or GL46/GL_COLOR_BUFFER_BIT GL46/GL_DEPTH_BUFFER_BIT))
 
-  ; swap the color buffers
-  (GLFW/glfwSwapBuffers (w/provide-window))
+  (when (and (not= @current-scene nil) (>= @dt 0))
+    (scene/process @current-scene @dt))
 
-  ; Poll for window events. The key callback above will only be
-  ; invoked during this call.
-  (GLFW/glfwPollEvents))
+  (GLFW/glfwSwapBuffers (w/provide-window)))
 
 (defn- game-loop
   []
@@ -72,9 +76,7 @@
         end-time (atom (time/get-time))
         dt (atom -1.0)]
     (while (not (GLFW/glfwWindowShouldClose @_window-entity))
-      (when (and (not= @current-scene nil) (>= @dt 0))
-        (scene/process @current-scene @dt))
-      (draw)
+      (draw dt)
       (reset! end-time (time/get-time))
       (reset! dt (- @end-time @begin-time))
       (reset! begin-time @end-time))))
