@@ -1,8 +1,8 @@
 (ns kigengames.kigen-engine.scene)
 
 (defprotocol SceneP
-  (process [this dt])
-  (init [this]))
+  (init [this])
+  (process [this dt]))
 
 (defrecord Scene [id name init-fn process-fn]
   SceneP
