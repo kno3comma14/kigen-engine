@@ -11,7 +11,8 @@
   :profiles {:uberjar {:aot :all}
              :shared {:dependencies [[org.lwjgl/lwjgl "3.3.2"]
                                      [org.lwjgl/lwjgl-opengl "3.3.2"]
-                                     [org.lwjgl/lwjgl-glfw "3.3.2"]]}
+                                     [org.lwjgl/lwjgl-glfw "3.3.2"]
+                                     [org.joml/joml "1.10.5"]]}
              ;; macos-arm64 support
              :natives-macos-arm64 {:dependencies [[org.lwjgl/lwjgl "3.3.2" :classifier "natives-macos-arm64"]
                                                   [org.lwjgl/lwjgl-opengl "3.3.2" :classifier "natives-macos-arm64"]

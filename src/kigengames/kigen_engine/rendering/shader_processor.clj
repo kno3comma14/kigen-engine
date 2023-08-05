@@ -1,7 +1,8 @@
 (ns kigengames.kigen-engine.rendering.shader-processor
   (:require [clojure.string :as s]
             [kigengames.kigen-engine.util.file :as f])
-  (:import (org.lwjgl.opengl GL11 GL46)))
+  (:import (org.lwjgl.opengl GL11 GL46)
+           (org.lwjgl BufferUtils)))
 
 (def splitter-token #"(#type)( )+([a-zA-Z]+)")
 
@@ -56,4 +57,10 @@
 
 (defn dettach []
   (GL46/glUseProgram 0))
+
+(defn upload-matrix4f [shader-program-id variable-name input-matrix]
+  (let [variable-location (GL46/glGetUniformLocation shader-program-id variable-name)
+        matrix-buffer (BufferUtils/createFloatBuffer 16)
+        _ (.get input-matrix matrix-buffer)]
+    (GL46/glUniformMatrix4fv variable-location false matrix-buffer)))
 
