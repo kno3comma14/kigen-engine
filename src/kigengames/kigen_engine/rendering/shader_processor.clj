@@ -58,9 +58,53 @@
 (defn dettach []
   (GL46/glUseProgram 0))
 
-(defn upload-matrix4f [shader-program-id variable-name input-matrix]
+(defn upload-matrix4f 
+  [shader-program-id variable-name input-matrix]
   (let [variable-location (GL46/glGetUniformLocation shader-program-id variable-name)
+        _ (use-shader shader-program-id)
         matrix-buffer (BufferUtils/createFloatBuffer 16)
         _ (.get input-matrix matrix-buffer)]
     (GL46/glUniformMatrix4fv variable-location false matrix-buffer)))
+
+(defn upload-matrix3f 
+  [shader-program-id variable-name input-matrix]
+  (let [variable-location (GL46/glGetUniformLocation shader-program-id variable-name)
+        _ (use-shader shader-program-id)
+        matrix-buffer (BufferUtils/createFloatBuffer 9)
+        _ (.get input-matrix matrix-buffer)]
+    (GL46/glUniformMatrix3fv variable-location false matrix-buffer)))
+
+(defn upload-vec4f
+  [shader-program-id variable-name input-vector]
+  (let [variable-location (GL46/glGetUniformLocation shader-program-id variable-name)
+        _ (use-shader shader-program-id)]
+    (GL46/glUniform4f variable-location (.x input-vector) (.y input-vector) (.z input-vector) (.w input-vector))))
+
+(defn upload-vec3f 
+  [shader-program-id variable-name input-vector]
+  (let [variable-location (GL46/glGetUniformLocation shader-program-id variable-name)
+        _ (use-shader shader-program-id)]
+    (GL46/glUniform3f variable-location (.x input-vector) (.y input-vector) (.z input-vector))))
+
+(defn upload-vec2f
+  [shader-program-id variable-name input-vector]
+  (let [variable-location (GL46/glGetUniformLocation shader-program-id variable-name)
+        _ (use-shader shader-program-id)]
+    (GL46/glUniform2f variable-location (.x input-vector) (.y input-vector))))
+
+(defn upload-float
+  [shader-program-id variable-name input-float]
+  (let [variable-location (GL46/glGetUniformLocation shader-program-id variable-name)
+        _ (use-shader shader-program-id)]
+    (GL46/glUniform1f variable-location input-float)))
+
+(defn upload-int
+  [shader-program-id variable-name input-int]
+  (let [variable-location (GL46/glGetUniformLocation shader-program-id variable-name)
+        _ (use-shader shader-program-id)]
+    (GL46/glUniform1i variable-location input-int)))
+
+
+
+
 
