@@ -55,7 +55,6 @@
                                    _ (GL46/glVertexAttribPointer 1 color-size GL46/GL_FLOAT false vertex-size-bytes (* position-size float-size-bytes))
                                    _ (GL46/glEnableVertexAttribArray 1)]))
                            (fn [dt]
-                             (sp/use-shader @program-id)
                              (sp/upload-matrix4f @program-id "uProjection" (.get-projection-matrix @main-camera))
                              (sp/upload-matrix4f @program-id "uView" (.get-view-matrix @main-camera))
                              (GL46/glBindVertexArray @vao-id)
