@@ -5,7 +5,7 @@ Kigen is a game engine based on [lwjgl](https://www.lwjgl.org/) written in Cloju
 
 ## Installation
 
-TODO
+TODO Upload this to Clojars. I will upload this when all base features are completed.
 
 ## Usage
 
@@ -18,11 +18,16 @@ lein with-profile macos-arm64 run
 
 ## Options
 
-At the momen
+At the moment the project can be run using the following platform names:
+- macos-arm64
+- windows-x86
+- windows-amd64
+- linux-amd64
+- linux-arm64
+- linux-arm32
 
-## Examples
-
-TODO
+These options are only tested in macos-arm64 and windows-amd64. If you want to contribute testing the test game
+in other platforms, please share the results(success, error) with an issue.
 
 ### Bugs
 
