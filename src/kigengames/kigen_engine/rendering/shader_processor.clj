@@ -53,7 +53,7 @@
 
 (defn use-shader
   [shader-program-id]
-  (GL46/glUseProgram shader-program-id))
+  (GL46/glUseProgram shader-program-id)) ;; Research conditional use - no big priority anyways
 
 (defn dettach []
   (GL46/glUseProgram 0))
@@ -103,6 +103,14 @@
   (let [variable-location (GL46/glGetUniformLocation shader-program-id variable-name)
         _ (use-shader shader-program-id)]
     (GL46/glUniform1i variable-location input-int)))
+
+(defn upload-texture
+  [shader-program-id variable-name input-slot]
+  (let [variable-location (GL46/glGetUniformLocation shader-program-id variable-name)
+        _ (use-shader shader-program-id)]
+    (GL46/glUniform1i variable-location input-slot)))
+
+
 
 
 
