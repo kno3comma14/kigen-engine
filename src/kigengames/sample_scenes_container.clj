@@ -34,7 +34,7 @@
                                         (Matrix4f.)
                                         (Matrix4f.))))
 
-(def test-texture (atom (texture/->Texture "textures/Kulsa_V2.png" 0)))
+(def test-texture (atom (texture/create-texture "textures/Kulsa_V2.png")))
 
 (def scene0 (scene/->Scene 0
                            "bla0"
@@ -42,7 +42,6 @@
                              (reset! program-id (sp/compile-shader "shaders/default.glsl"))
                              (reset! vao-id (GL46/glGenVertexArrays))
                              (GL46/glBindVertexArray @vao-id)
-                             (reset! test-texture (.init @test-texture))
                              (let [vertex-buffer (buffer/float-array->float-buffer vertex-vector)
                                    _ (reset! vbo-id (GL46/glGenBuffers))
                                    _ (GL46/glBindBuffer GL46/GL_ARRAY_BUFFER @vbo-id)
@@ -64,7 +63,7 @@
                            (fn [_dt]
                              (sp/upload-texture @program-id "TEX_SAMPLER" 0)
                              (GL46/glActiveTexture GL46/GL_TEXTURE0)
-                             (.bind @test-texture)
+                             (texture/bind @test-texture)
                              (sp/upload-matrix4f @program-id "uProjection" (.get-projection-matrix @main-camera))
                              (sp/upload-matrix4f @program-id "uView" (.get-view-matrix @main-camera))
                              (sp/upload-float @program-id "uTime" (time/get-time))
