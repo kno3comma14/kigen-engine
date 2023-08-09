@@ -4,9 +4,11 @@
             [kigengames.kigen-engine.camera :as camera]
             [kigengames.kigen-engine.util.buffer :as buffer]
             [kigengames.kigen-engine.util.time :as time]
-            [kigengames.kigen-engine.rendering.texture :as texture]) 
+            [kigengames.kigen-engine.rendering.texture :as texture]
+            [kigengames.kigen-engine.window :as w]) 
   (:import (org.lwjgl.opengl GL46)
-           (org.joml Vector2f Matrix4f)))
+           (org.joml Vector2f Matrix4f)
+           (dev.dominion.ecs.api Dominion)))
 
 (def vertex-vector
    ;; POS                ;; RGB                  ;; UV coords                   
@@ -26,7 +28,7 @@
 
 (def main-camera (atom (camera/->Camera 0
                                         "camera0"
-                                        (Vector2f. -200.0 -300.0)
+                                        (Vector2f. -100.0 -300.0)
                                         (fn [pos dt]
                                           (Vector2f. (- (.x pos) (* 50.0 dt)) (- (.y pos) (* 20.0 dt)))
                                           ;pos
@@ -34,7 +36,9 @@
                                         (Matrix4f.)
                                         (Matrix4f.))))
 
-(def test-texture (atom (texture/create-texture "textures/Kulsa_V2.png")))
+(def test-texture (atom nil))
+
+(def dom (Dominion/create))
 
 (def scene0 (scene/->Scene 0
                            "bla0"
@@ -42,6 +46,7 @@
                              (reset! program-id (sp/compile-shader "shaders/default.glsl"))
                              (reset! vao-id (GL46/glGenVertexArrays))
                              (GL46/glBindVertexArray @vao-id)
+                             (reset! test-texture (texture/create-texture "textures/Kulsa_V2.png"))
                              (let [vertex-buffer (buffer/float-array->float-buffer vertex-vector)
                                    _ (reset! vbo-id (GL46/glGenBuffers))
                                    _ (GL46/glBindBuffer GL46/GL_ARRAY_BUFFER @vbo-id)
@@ -63,7 +68,7 @@
                            (fn [_dt]
                              (sp/upload-texture @program-id "TEX_SAMPLER" 0)
                              (GL46/glActiveTexture GL46/GL_TEXTURE0)
-                             (texture/bind @test-texture)
+                             (texture/bind-texture @test-texture)
                              (sp/upload-matrix4f @program-id "uProjection" (.get-projection-matrix @main-camera))
                              (sp/upload-matrix4f @program-id "uView" (.get-view-matrix @main-camera))
                              (sp/upload-float @program-id "uTime" (time/get-time))
@@ -75,4 +80,5 @@
                              (GL46/glDisableVertexAttribArray 1)
                              (GL46/glBindVertexArray 0)
                              (sp/dettach))
-                           main-camera))
+                           main-camera
+                           dom))

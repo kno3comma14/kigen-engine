@@ -1,5 +1,5 @@
 (ns kigengames.kigen-engine.camera
-  (:import (org.joml  Vector3f)))
+  (:import (org.joml  Vector3f Matrix4f)))
 
 (defprotocol CameraP
   (init [this])

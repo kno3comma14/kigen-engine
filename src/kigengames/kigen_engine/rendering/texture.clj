@@ -35,11 +35,6 @@
                                                image)
     :else (Exception. (str "ERROR: Can't find the number of channels."))))
 
-(defprotocol TextureP 
-  (init [this]) 
-  (bind [this])
-  (unbind [this]))
-
 (defn create-texture 
   [path]
   (let [t-id (GL46/glGenTextures)
