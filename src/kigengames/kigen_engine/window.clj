@@ -16,7 +16,7 @@
   [width height title]
   (if @_window-entity
     (warn "Only one instance of GLFW window can be created.")
-    (let [window (GLFW/glfwCreateWindow width height title 0 0)]
+    (let [window (GLFW/glfwCreateWindow width height title 0 0)] 
       (if (zero? window)
         (throw (RuntimeException. "Failed to create the GLFW window"))
         (reset! _window-entity window)))))

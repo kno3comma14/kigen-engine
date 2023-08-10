@@ -3,6 +3,8 @@
 /checkouts
 /.clj-kondo
 /.lsp
+/.calva
+.nrepl-history
 profiles.clj
 pom.xml
 pom.xml.asc
