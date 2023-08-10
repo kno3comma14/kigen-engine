@@ -5,10 +5,9 @@
             [kigengames.kigen-engine.util.buffer :as buffer]
             [kigengames.kigen-engine.util.time :as time]
             [kigengames.kigen-engine.rendering.texture :as texture]
-            [kigengames.kigen-engine.window :as w]) 
+            [kigengames.kigen-engine.data.kosmo :as kosmo]) 
   (:import (org.lwjgl.opengl GL46)
-           (org.joml Vector2f Matrix4f)
-           (dev.dominion.ecs.api Dominion)))
+           (org.joml Vector2f Matrix4f)))
 
 (def vertex-vector
    ;; POS                ;; RGB                  ;; UV coords                   
@@ -37,8 +36,6 @@
                                         (Matrix4f.))))
 
 (def test-texture (atom nil))
-
-(def dom (Dominion/create))
 
 (def scene0 (scene/->Scene 0
                            "bla0"
@@ -81,4 +78,4 @@
                              (GL46/glBindVertexArray 0)
                              (sp/dettach))
                            main-camera
-                           dom))
+                           {}))

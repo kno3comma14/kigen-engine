@@ -1,6 +1,5 @@
 (ns kigengames.kigen-engine.scene
-  (:require [kigengames.kigen-engine.data.dominion-handler :as dh]
-            [kigengames.kigen-engine.camera :as cam]))
+  (:require [kigengames.kigen-engine.camera :as cam]))
 
 (defprotocol SceneP
   (init [this])
@@ -10,9 +9,8 @@
   SceneP
   (init 
     [_]
-    (let [_ (.createEntity ctx (java.util.HashMap {:bla "che"}))
-          camera1 (dh/find-entities-by-type ctx (type (java.util.HashMap {:bla "che"})))]
-      (prn camera1))
+    (let [_ (.createEntity ctx (java.util.HashMap {:bla "che"}))]
+      )
     (.init @camera)
     (init-fn))
   (process 

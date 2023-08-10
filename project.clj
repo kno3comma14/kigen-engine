@@ -14,8 +14,7 @@
                                      [org.lwjgl/lwjgl-glfw "3.3.2"]
                                      [org.lwjgl/lwjgl-stb "3.3.2"]
                                      [org.joml/joml "1.10.5"]
-                                     ;[nano-id "1.0.0"]
-                                     ]
+                                     [nano-id "1.0.0"]]
                       :plugins [[nrepl/lein-nrepl "0.3.2"]]}
              ;; macos-arm64 support
              :natives-macos-arm64 {:dependencies [[org.lwjgl/lwjgl "3.3.2" :classifier "natives-macos-arm64"]
