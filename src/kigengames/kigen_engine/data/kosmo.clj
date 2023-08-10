@@ -1,7 +1,5 @@
 (ns kigengames.kigen-engine.data.kosmo
-  (:require [kigengames.kigen-engine.data.entity :as entity]
-            [kigengames.kigen-engine.data.component :as component]
-            [nano-id.core :refer [nano-id]]))
+  (:require [kigengames.kigen-engine.data.entity :as entity]))
 
 (defn- create-pairs [colls]
   (vec
@@ -50,19 +48,3 @@
   
   (find-entities-with [this type-list]
     (filter-entities-by-types type-list entities)))
-
-
-(comment
-  (def sub-component-a "a")
-  (def sub-component-b "b")
-  (def component-a (atom (component/->Component nil sub-component-a)))
-  (def component-b (atom (component/->Component nil sub-component-b)))
-  (reset! component-a (.create @component-a))
-  (reset! component-b (.create @component-b))
-  
-  (def entity-a (atom (entity/->Entity nil "entity-a" true nil)))
-  (reset! entity-a (.init @entity-a))
-  (def entity-b (atom (entity/->Entity nil "entity-b" true nil)))
-  (reset! entity-b (.init @entity-b))
-
-  )
