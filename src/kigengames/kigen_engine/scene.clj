@@ -5,7 +5,7 @@
   (init [this])
   (process [this dt]))
 
-(defrecord Scene [id name init-fn init-drawable-elements-fn process-fn camera ctx]
+(defrecord Scene [id name init-fn init-drawable-elements-fn process-fn camera]
   SceneP
   (init
    [_]
@@ -14,6 +14,6 @@
    (init-fn))
   (process 
     [_ dt] 
-    (reset! camera (.update-position @camera (:position @camera) dt))
+    (reset! camera (.update-position @camera (:transform @camera) dt))
     (d/process-default-context camera)
     (process-fn dt)))
