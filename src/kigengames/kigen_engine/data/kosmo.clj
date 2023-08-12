@@ -9,16 +9,20 @@
                     x (first colls)]
                 (cons x more))))))
 
-(defn- filter-components-by-types 
-  [input-types content] 
+(defn- filter-components-by-types
+  [input-types content]
   (let [cmp-pairs (create-pairs [input-types content])
-        values (map second (filter (fn [x] (= (type (:instance (second x))) (first x))) cmp-pairs))]
+        values (map second
+                    (filter
+                     (fn [x] (= (type (:instance (second x))) (first x)))
+                     cmp-pairs))]
     (vec values)))
 
 (defn filter-entities-by-types
-  [input-types entities] 
-  (reduce (fn [acc, item] (when (seq (filter-components-by-types input-types (:backpack item)))
-                            (conj acc item)))
+  [input-types entities]
+  (reduce (fn [acc, item]
+            (when (seq (filter-components-by-types input-types (:backpack item)))
+              (conj acc item)))
           []
           entities))
 
