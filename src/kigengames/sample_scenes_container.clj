@@ -8,10 +8,9 @@
 (def main-camera (atom (camera/->Camera 0
                                         "camera0"
                                         (g/->Transform (Vector2f. -100.0 -300.0) (Vector2f. 1.0 1.0))
-                                        (fn [tr dt] 
+                                        (fn [tr dt]
                                           (let [pos (:position tr)]
-                                            (g/->Transform (Vector2f. (- (.x pos) (* 50.0 dt)) (- (.y pos) (* 20.0 dt)))
-                                                           (Vector2f. 1.0 1.0))))
+                                            (.translate tr (Vector2f. (- (.x pos) (* 50.0 dt)) (- (.y pos) (* 20.0 dt))))))
                                         (Matrix4f.)
                                         (Matrix4f.))))
 
