@@ -16,3 +16,7 @@
     (validate (assoc this :position new-position))) 
   (change-scale [this new-scale]
     (validate (assoc this :scale new-scale))))
+
+(defn create-transform
+  [position scale]
+  (->Transform position scale)) ;; Improvement needed

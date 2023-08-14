@@ -2,19 +2,12 @@
   (:require [kigengames.kigen-engine.data.component :as component]
             [nano-id.core :refer [nano-id]]))
 
-(defprotocol EntityP
-  (init [this])
+(defprotocol EntityP 
   (disable [this])
   (add-components [this components]))
 
 (defrecord Entity [id name enabled? backpack]
-  EntityP
-  (init
-    [_]
-    (let [id (nano-id)
-          is-enabled? true]
-      (->Entity id name is-enabled? (vector))))
-
+  EntityP 
   (disable
     [this]
     (assoc this :enabled false))
@@ -27,3 +20,9 @@
                                      components)
                              (conj backpack components))]
       (assoc this :backpack updated-backpack))))
+
+(defn create
+  [name]
+  (let [id (nano-id)
+        is-enabled? true]
+    (->Entity id name is-enabled? (vector))))

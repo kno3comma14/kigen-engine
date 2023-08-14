@@ -1,19 +1,16 @@
-(ns kigengames.kigen-engine.scene
-  (:require [kigengames.kigen-engine.data.default :as d]))
+(ns kigengames.kigen-engine.scene)
 
 (defprotocol SceneP
   (init [this])
   (process [this dt]))
 
-(defrecord Scene [id name init-fn init-drawable-elements-fn process-fn camera]
+(defrecord Scene [id name init-fn process-fn camera renderer]
   SceneP
   (init
-   [_]
-   (d/init-default-context init-drawable-elements-fn)
-   (.init @camera)
-   (init-fn))
-  (process 
-    [_ dt] 
-    (reset! camera (.update-position @camera (:transform @camera) dt))
-    (d/process-default-context camera)
-    (process-fn dt)))
+    [this] 
+    (.init @camera)
+    (init-fn this))
+  (process
+    [this dt]
+    (reset! camera (.update-position @camera (:transform @camera) dt)) 
+    (process-fn this dt)))

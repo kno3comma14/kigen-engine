@@ -11,18 +11,6 @@
 (def ^:private ^:const vertex-size 6)
 (def ^:private ^:const vertex-size-bytes (* vertex-size Float/BYTES))
 
-;; Sprite Renderer specific values. Watch later for refactor
-(def sprites (atom []))
-(def number-of-sprites (atom 0))
-(def has-capacity (atom true))
-(def vertices (atom []))
-
-;; GL stuff
-(def vao-id (atom -1))
-(def vbo-id (atom -1))
-
-(def shader (atom 0))
-
 (defn calculate-buffer-size
   [batch-size]
   (* batch-size 4 vertex-size Float/BYTES))
@@ -49,7 +37,7 @@
           (recur (inc i)))))))
 
 (defn load-vertex-properties
-  [index]
+  [index sprites vertices]
   (let [sprite (nth @sprites index)
         offset (atom (* 4 index vertex-size))
         color (:color sprite)
@@ -75,10 +63,10 @@
 
 (defprotocol BatchRendererP
   (start [this])
-  (add-sprite-renderer [this sr])
+  (add-sprite [this sr])
   (render [this]))
 
-(defrecord BatchRenderer [max-batch-size]
+(defrecord BatchRenderer [max-batch-size sprites number-of-sprites has-capacity vertices vao-id vbo-id shader]
   BatchRendererP
   (start 
     [_]
@@ -90,7 +78,7 @@
     (GL46/glBufferData GL46/GL_ARRAY_BUFFER (calculate-buffer-size max-batch-size) GL46/GL_DYNAMIC_DRAW)
     ;; Load indices buffer
     (let [ebo-id (GL46/glGenBuffers)
-          indices (to-array (generate-indices max-batch-size))]
+          indices (int-array (generate-indices max-batch-size))]
       (GL46/glBindBuffer GL46/GL_ELEMENT_ARRAY_BUFFER ebo-id)
       (GL46/glBufferData GL46/GL_ELEMENT_ARRAY_BUFFER indices GL46/GL_STATIC_DRAW))
 
@@ -99,21 +87,21 @@
 
     (GL46/glVertexAttribPointer 1 color-size GL46/GL_FLOAT false vertex-size-bytes color-offset)
     (GL46/glEnableVertexAttribArray 1))
-  (add-sprite-renderer
+  (add-sprite
    [_ sr]
    (let [index @number-of-sprites]
-     (swap! sprites update index (fn [x] sr))
+     (swap! sprites update index (fn [_] sr))
      (swap! number-of-sprites inc)
-     (load-vertex-properties index)
+     (load-vertex-properties index sprites vertices)
      (when (>= @number-of-sprites max-batch-size)
        (reset! has-capacity false))))
   (render
    [_]
    (GL46/glBindBuffer GL46/GL_ARRAY_BUFFER @vbo-id)
-   (GL46/glBufferSubData GL46/GL_ARRAY_BUFFER 0 @vertices)
-   (sp/use-shader @shader)
-   (sp/upload-matrix4f @shader "uProjection" (.get-projection-matrix (:camera w/current-scene)))
-   (sp/upload-matrix4f @shader "uView" (.get-view-matrix (:camera w/current-scene)))
+   (GL46/glBufferSubData GL46/GL_ARRAY_BUFFER 0 (float-array @vertices)) 
+   (sp/use-shader @shader) 
+   (sp/upload-matrix4f @shader "uProjection" (.get-projection-matrix @(:camera @w/current-scene)))
+   (sp/upload-matrix4f @shader "uView" (.get-view-matrix @(:camera @w/current-scene)))
    (GL46/glBindVertexArray @vao-id)
    (GL46/glEnableVertexAttribArray 0)
    (GL46/glEnableVertexAttribArray 1)
@@ -125,8 +113,11 @@
 
 (defn create
   [max-batch-size]
-  (let [instance (->BatchRenderer max-batch-size)]
-    (reset! shader (sp/compile-shader "shaders/default.glsl"))
-    (reset! vertices (vec (repeat (* max-batch-size 4 vertex-size) 0.0)))
-    (reset! sprites (vec (repeat max-batch-size nil)))
-    instance))
+  (let [shader (atom (sp/compile-shader "shaders/default.glsl"))
+        vertices (atom (vec (repeat (* max-batch-size 4 vertex-size) 0.0)))
+        sprites (atom (vec (repeat max-batch-size nil)))
+        number-of-sprites (atom 0)
+        has-capacity (atom true)
+        vao-id (atom -1)
+        vbo-id (atom -1)]
+    (->BatchRenderer max-batch-size sprites number-of-sprites has-capacity vertices vao-id vbo-id shader)))

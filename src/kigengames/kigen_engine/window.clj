@@ -4,8 +4,7 @@
   (:require [taoensso.timbre :as timbre :refer [warn]]
             [kigengames.kigen-engine.keyboard-input-event-listener :as kl]
             [kigengames.kigen-engine.mouse-input-event-listener :as ml]
-            [kigengames.kigen-engine.util.time :as time]
-            [kigengames.kigen-engine.window :as w]
+            [kigengames.kigen-engine.util.time :as time] 
             [kigengames.kigen-engine.scene :as scene]))
 
 (defonce _window-entity (atom nil))
@@ -68,7 +67,7 @@
   (when (and (not= @current-scene nil) (>= @dt 0))
     (scene/process @current-scene @dt))
 
-  (GLFW/glfwSwapBuffers (w/provide-window)))
+  (GLFW/glfwSwapBuffers (provide-window)))
 
 (defn- game-loop
   []

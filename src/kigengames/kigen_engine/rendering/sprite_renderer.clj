@@ -5,7 +5,7 @@
   c/ComponentP
   (init [this]
     (init-fn this))
-  (update [this dt]
+  (process [this dt]
     (update-fn this dt)))
 
 (defn create[color transform init-fn update-fn]

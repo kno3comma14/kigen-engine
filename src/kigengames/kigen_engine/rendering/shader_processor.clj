@@ -109,10 +109,3 @@
   (let [variable-location (GL46/glGetUniformLocation shader-program-id variable-name)
         _ (use-shader shader-program-id)]
     (GL46/glUniform1i variable-location input-slot)))
-
-
-
-
-
-
-

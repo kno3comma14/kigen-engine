@@ -2,14 +2,14 @@
   (:require [nano-id.core :refer [nano-id]]))
 
 (defprotocol ComponentP 
-  (init [this init-fn])
-  (update [this dt]))
+  (init [this])
+  (process [this dt]))
 
 (defrecord Component [id instance init-fn update-fn]
   ComponentP 
-  (init [this init-fn]
+  (init [this]
     (init-fn this))
-  (update [this dt]
+  (process [this dt]
     (update-fn this dt)))
 
 (defn create 
