@@ -6,8 +6,7 @@
             [kigengames.kigen-engine.rendering.sprite-renderer :as sr])
   (:import (org.joml Vector2f Matrix4f Vector4f)))
 
-(def main-camera (atom (camera/->Camera 0
-                                        "camera0"
+(def main-camera (atom (camera/->Camera "camera0"
                                         (g/->Transform (Vector2f. 0.0 0.0) (Vector2f. 1.0 1.0))
                                         (fn [tr _dt]
                                           tr)
