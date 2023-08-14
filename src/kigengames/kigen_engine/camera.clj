@@ -1,29 +1,30 @@
 (ns kigengames.kigen-engine.camera
-  (:import (org.joml  Vector3f Matrix4f)))
+  (:import (org.joml  Vector3f)))
 
 (defprotocol CameraP
   (init [this])
-  (update-position [this actual-position dt])
+  (update-position [this new-transform dt])
   (get-view-matrix [this])
   (get-projection-matrix [this]))
 
-(defrecord Camera [id name position update-fn projection-matrix view-matrix]
+(defrecord Camera [id name transform update-fn projection-matrix view-matrix]
   CameraP
   (init [_]
     (.identity projection-matrix)
     (.ortho projection-matrix 0.0 (* 32.0 40.0) 0.0 (* 32.0 21.0) 0.0 100.0))
 
-  (update-position [_ actual-position dt]
-    (->Camera id name (update-fn actual-position dt) update-fn  projection-matrix view-matrix))
+  (update-position [_ new-transform dt]
+    (->Camera id name (update-fn new-transform dt) update-fn  projection-matrix view-matrix))
 
   (get-view-matrix [_]
-    (let [front-camera (Vector3f. 0.0 0.0 -1.0)
-          upper-camera (Vector3f. 0.0 1.0 0.0)
+    (let [front-camera-position (Vector3f. 0.0 0.0 -1.0)
+          upper-camera-position (Vector3f. 0.0 1.0 0.0)
+          position (:position transform)
           _ (.identity view-matrix)
           _ (.lookAt view-matrix 
                      (Vector3f. (.x position) (.y position) 20.0)
-                     (.add front-camera (.x position) (.y position) 0.0)
-                     upper-camera)]
+                     (.add front-camera-position (.x position) (.y position) 0.0)
+                     upper-camera-position)]
       view-matrix))
 
   (get-projection-matrix [_]

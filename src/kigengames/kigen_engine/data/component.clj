@@ -1,15 +1,20 @@
 (ns kigengames.kigen-engine.data.component
   (:require [nano-id.core :refer [nano-id]]))
 
-(defprotocol ComponentP
-  (create [this]))
+(defprotocol ComponentP 
+  (init [this])
+  (process [this dt]))
 
-(defrecord Component [id instance]
-  ComponentP
-  (create
-    [_]
-    (let [new-id (nano-id)]
-      (->Component new-id instance))))
+(defrecord Component [id instance init-fn update-fn]
+  ComponentP 
+  (init [this]
+    (init-fn this))
+  (process [this dt]
+    (update-fn this dt)))
+
+(defn create 
+  [instance init-fn update-fn]
+  (->Component (nano-id) instance init-fn update-fn))
 
 (defn study-components
   [target]
