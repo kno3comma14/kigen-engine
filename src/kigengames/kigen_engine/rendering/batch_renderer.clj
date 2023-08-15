@@ -159,7 +159,9 @@
 
 (defn create
   [max-batch-size]
-  (let [shader (atom (sp/compile-shader "shaders/default.glsl"))
+  (let [shader (atom (if (nil? @sp/program-id)
+                       (sp/compile-shader "shaders/default.glsl")
+                       (sp/program-id)))
         vertices (atom (vec (repeat (* max-batch-size 4 vertex-size) 0.0)))
         textures (atom [])
         sprites (atom (vec (repeat max-batch-size nil)))
