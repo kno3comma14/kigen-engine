@@ -43,6 +43,7 @@
         width (BufferUtils/createIntBuffer 1)
         height (BufferUtils/createIntBuffer 1)
         channels (BufferUtils/createIntBuffer 1)
+        _ (STBImage/stbi_set_flip_vertically_on_load true)
         complete-path (.getPath (io/resource path))
         image (STBImage/stbi_load complete-path width height channels 0)]
     (if (not= image nil)

@@ -16,3 +16,4 @@ pom.xml.asc
 .hgignore
 .hg/
 *.~undo-tree~
+.DS_Store
