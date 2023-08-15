@@ -3,8 +3,7 @@
            (org.lwjgl.opengl GL GL46))
   (:require [taoensso.timbre :as timbre :refer [warn]]
             [kigengames.kigen-engine.keyboard-input-event-listener :as kl]
-            [kigengames.kigen-engine.mouse-input-event-listener :as ml]
-            [kigengames.kigen-engine.util.time :as time] 
+            [kigengames.kigen-engine.mouse-input-event-listener :as ml] 
             [kigengames.kigen-engine.scene :as scene]))
 
 (defonce _window-entity (atom nil))
@@ -71,12 +70,12 @@
 
 (defn- game-loop
   []
-  (let [begin-time (atom (time/get-time))
-        end-time (atom (time/get-time))
+  (let [begin-time (atom (float (GLFW/glfwGetTime)))
+        end-time (atom (float (GLFW/glfwGetTime)))
         dt (atom -1.0)]
     (while (not (GLFW/glfwWindowShouldClose @_window-entity))
       (draw dt)
-      (reset! end-time (time/get-time))
+      (reset! end-time (float (GLFW/glfwGetTime)))
       (reset! dt (- @end-time @begin-time))
       (reset! begin-time @end-time))))
 

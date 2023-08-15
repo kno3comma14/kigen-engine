@@ -1,13 +1,28 @@
 (ns kigengames.kigen-engine.rendering.sprite-renderer
-  (:require [kigengames.kigen-engine.data.component :as c]))
+  (:require [kigengames.kigen-engine.data.component :as c])
+  (:import (org.joml Vector4f Vector2f)))
 
-(defrecord SpriteRenderer [color transform init-fn update-fn]
-  c/ComponentP
-  (init [this]
-    (init-fn this))
-  (process [this dt]
-    (update-fn this dt)))
+(defprotocol SpriteRendererP
+  (get-texture-coords [this]))
 
-(defn create[color transform init-fn update-fn]
-  (let [sprite-renderer-instance (->SpriteRenderer color transform init-fn update-fn)]
-    (c/create sprite-renderer-instance init-fn update-fn)))
+(defrecord SpriteRenderer [color texture-coords texture transform init-fn update-fn]
+  SpriteRendererP
+  (get-texture-coords [_] ;; I will remove this
+    (let [t-coords [(Vector2f. 1.0 1.0)
+                    (Vector2f. 1.0 0.0)
+                    (Vector2f. 0.0 0.0)
+                    (Vector2f. 0.0 1.0)]]
+      t-coords)))
+
+(defn create
+  ([color transform init-fn update-fn]
+   (let [sprite-renderer-instance (->SpriteRenderer color nil nil transform init-fn update-fn)]
+     (c/create sprite-renderer-instance init-fn update-fn)))
+  ([texture-coords texture transform init-fn update-fn]
+   (let [sprite-renderer-instance (->SpriteRenderer (Vector4f. 1.0 1.0 1.0 1.0) 
+                                                    texture-coords 
+                                                    (:instance texture)
+                                                    transform 
+                                                    init-fn 
+                                                    update-fn)]
+     (c/create sprite-renderer-instance init-fn update-fn))))

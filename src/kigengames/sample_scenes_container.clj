@@ -3,12 +3,12 @@
             [kigengames.kigen-engine.camera :as camera] 
             [kigengames.kigen-engine.geometry :as g]
             [kigengames.kigen-engine.rendering.renderer :as renderer]
-            [kigengames.kigen-engine.rendering.sprite-renderer :as sr])
+            [kigengames.kigen-engine.rendering.sprite-renderer :as sr]
+            [kigengames.kigen-engine.rendering.texture :as texture])
   (:import (org.joml Vector2f Matrix4f Vector4f)))
 
-(def main-camera (atom (camera/->Camera 0
-                                        "camera0"
-                                        (g/->Transform (Vector2f. 0.0 0.0) (Vector2f. 1.0 1.0))
+(def main-camera (atom (camera/->Camera "camera0"
+                                        (g/->Transform (Vector2f. -250.0 0.0) (Vector2f. 1.0 1.0))
                                         (fn [tr _dt]
                                           tr)
                                         (Matrix4f.)
@@ -46,6 +46,36 @@
                            (fn [this dt]
                              (prn (str "Frames per second(FPS): " (/ 1.0 dt)))
                              (let [r (:renderer this)] 
+                               (.render r)))
+                           main-camera
+                           renderer0))
+
+(def scene1 (scene/->Scene 1
+                           "bla1"
+                           (fn [this]
+                             (let [r (:renderer this)
+                                   sr0 (sr/create [(Vector2f. 1.0 1.0)
+                                                   (Vector2f. 1.0 0.0)
+                                                   (Vector2f. 0.0 1.0)
+                                                   (Vector2f. 0.0 0.0)]
+                                                  (texture/create "textures/img0.png" (fn [_]) (fn [_]))
+                                                  (g/create-transform (Vector2f. 100.0 100.0) (Vector2f. 256.0 256.0))
+                                                  (fn [_])
+                                                  (fn [_]))
+                                   sr1 (sr/create [(Vector2f. 1.0 1.0)
+                                                   (Vector2f. 1.0 0.0)
+                                                   (Vector2f. 0.0 1.0)
+                                                   (Vector2f. 0.0 0.0)]
+                                                  (texture/create "textures/img1.png" (fn [_]) (fn [_]))
+                                                  (g/create-transform (Vector2f. 400.0 100.0) (Vector2f. 256.0 256.0))
+                                                  (fn [_])
+                                                  (fn [_]))]
+                               (.add-drawable r (:instance sr1))
+                               (.add-drawable r (:instance sr0))
+                               ))
+                           (fn [this dt]
+                             (prn (str "Frames per second(FPS): " (/ 1.0 dt)))
+                             (let [r (:renderer this)]
                                (.render r)))
                            main-camera
                            renderer0))
