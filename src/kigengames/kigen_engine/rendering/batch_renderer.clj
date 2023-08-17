@@ -83,7 +83,9 @@
 (defprotocol BatchRendererP
   (start [this])
   (add-sprite [this sr])
-  (render [this]))
+  (render [this])
+  (verify-space [this])
+  (exists-texture? [this t]))
 
 (defrecord BatchRenderer [max-batch-size sprites number-of-sprites has-capacity vertices textures vao-id vbo-id shader]
   BatchRendererP
@@ -154,8 +156,13 @@
              (inc acc))
            0
            @textures)
-
-   (sp/dettach)))
+   (sp/dettach))
+   (verify-space
+    [_this]
+    (< (count @textures) 8))
+   (exists-texture?
+    [_this t]
+    (boolean (some #(= t %) @textures))))
 
 (defn create
   [max-batch-size]

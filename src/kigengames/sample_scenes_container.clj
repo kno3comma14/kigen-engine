@@ -73,8 +73,7 @@
                                (.add-drawable r (:instance sr1))
                                (.add-drawable r (:instance sr0))
                                ))
-                           (fn [this dt]
-                             (prn (str "Frames per second(FPS): " (/ 1.0 dt)))
+                           (fn [this dt] 
                              (let [r (:renderer this)]
                                (.render r)))
                            main-camera
