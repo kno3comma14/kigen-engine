@@ -47,6 +47,4 @@
 
 (defn create 
   [entities]
-  (if (empty? entities)
-    (->Kosmo (vector))
-    (->Kosmo entities)))
+  (->Kosmo (or entities [])))
