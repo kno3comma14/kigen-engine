@@ -13,9 +13,11 @@
     [_ target] 
     (let [added (atom false)
           batch (first (filter (fn [item] @(:has-capacity item)) @batches))]
-      (when (not= batch nil) 
-        (.add-sprite batch target)
-        (reset! added true)) 
+      (when (not= batch nil)
+        (let [tex (:texture target)]
+          (when (or (nil? tex) (.exists-texture? batch tex) (.verify-space batch)) 
+            (.add-sprite batch target)
+            (reset! added true)))) 
       (when (not @added)
         (let [new-br (br/create max-batch-size)] 
           (.start new-br)

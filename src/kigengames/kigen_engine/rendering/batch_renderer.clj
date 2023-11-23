@@ -83,7 +83,9 @@
 (defprotocol BatchRendererP
   (start [this])
   (add-sprite [this sr])
-  (render [this]))
+  (render [this])
+  (verify-space [this])
+  (exists-texture? [this t]))
 
 (defrecord BatchRenderer [max-batch-size sprites number-of-sprites has-capacity vertices textures vao-id vbo-id shader]
   BatchRendererP
@@ -154,12 +156,19 @@
              (inc acc))
            0
            @textures)
-
-   (sp/dettach)))
+   (sp/dettach))
+   (verify-space
+    [_this]
+    (< (count @textures) 8))
+   (exists-texture?
+    [_this t]
+    (boolean (some #(= t %) @textures))))
 
 (defn create
   [max-batch-size]
-  (let [shader (atom (sp/compile-shader "shaders/default.glsl"))
+  (let [shader (atom (if (nil? @sp/program-id)
+                       (sp/compile-shader "shaders/default.glsl")
+                       (sp/program-id)))
         vertices (atom (vec (repeat (* max-batch-size 4 vertex-size) 0.0)))
         textures (atom [])
         sprites (atom (vec (repeat max-batch-size nil)))

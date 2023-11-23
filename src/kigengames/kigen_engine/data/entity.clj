@@ -6,7 +6,7 @@
   (disable [this])
   (add-components [this components]))
 
-(defrecord Entity [id name enabled? backpack]
+(defrecord Entity [id name enabled? backpack kosmo]
   EntityP 
   (disable
     [this]
@@ -20,9 +20,3 @@
                                      components)
                              (conj backpack components))]
       (assoc this :backpack updated-backpack))))
-
-(defn create
-  [name]
-  (let [id (nano-id)
-        is-enabled? true]
-    (->Entity id name is-enabled? (vector))))

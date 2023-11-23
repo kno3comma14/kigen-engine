@@ -5,6 +5,7 @@
            (org.lwjgl BufferUtils)))
 
 (def splitter-token #"(#type)( )+([a-zA-Z]+)")
+(def program-id (atom nil))
 
 (defn extract-shader-programs
   [path]
@@ -49,7 +50,7 @@
           success (GL46/glGetProgrami shader-program-id GL46/GL_LINK_STATUS)]
       (if (= success GL11/GL_FALSE) ;; TODO add more logic
         (throw (Exception. (str "ERROR: " shader-program-id " shader compilation failed.")))
-        shader-program-id))))
+        (reset! program-id shader-program-id)))))
 
 (defn use-shader
   [shader-program-id]
