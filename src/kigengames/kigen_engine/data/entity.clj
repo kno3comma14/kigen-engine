@@ -6,15 +6,14 @@
   (disable [this])
   (add-components [this components]))
 
-(defrecord Entity [id name enabled? backpack]
+(defrecord Entity [id name enabled backpack]
   EntityP 
   (disable
     [this]
     (assoc this :enabled false))
   
-  (add-components [this components]
-    (let [is-list? (component/study-components components)
-          updated-backpack (if is-list?
+  (add-components [this components] ;; Addition of validity pending
+    (let [updated-backpack (if (sequential? components)
                              (reduce (fn [acc, item] (conj acc item))
                                      backpack
                                      components)
