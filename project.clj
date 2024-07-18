@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [com.taoensso/timbre "6.2.2"]
                  [nrepl "1.0.0"]]
-  :main ^:skip-aot kigengames.core
+  :main ^:skip-aot kigengames.core ;; I will remove this after testing release 1
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}
              :shared {:dependencies [[org.lwjgl/lwjgl "3.3.3"]
@@ -16,7 +16,8 @@
                                      [org.joml/joml "1.10.5"]
                                      [nano-id "1.0.0"]
                                      [metosin/malli "0.11.0"]]
-                      :plugins [[nrepl/lein-nrepl "0.3.2"]]}
+                      :plugins [[nrepl/lein-nrepl "0.3.2"]]
+                      :source-paths ["src" "samples"]}
              ;; macos-arm64 support
              :natives-macos-arm64 {:dependencies [[org.lwjgl/lwjgl "3.3.3" :classifier "natives-macos-arm64"]
                                                   [org.lwjgl/lwjgl-opengl "3.3.3" :classifier "natives-macos-arm64"]
@@ -53,4 +54,5 @@
                                                   [org.lwjgl/lwjgl-opengl "3.3.3" :classifier "natives-linux-arm32"]
                                                   [org.lwjgl/lwjgl-glfw "3.3.3" :classifier "natives-linux-arm32"]
                                                   [org.lwjgl/lwjgl-stb "3.3.3" :classifier "natives-linux-arm32"]]}
-             :linux-arm32 [:shared :natives-linux-arm32]})
+             :linux-arm32 [:shared :natives-linux-arm32]}
+  :deploy-repositories [["releases" :clojars]])
