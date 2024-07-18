@@ -1,11 +1,12 @@
 (ns kigen-engine-samples.basic-samples
-  (:require [kigengames.kigen-engine.scene :as scene]
-            [kigengames.kigen-engine.camera :as camera]
+  (:require [kigengames.kigen-engine.camera :as camera]
             [kigengames.kigen-engine.geometry :as g]
             [kigengames.kigen-engine.rendering.renderer :as renderer]
+            [kigengames.kigen-engine.rendering.sprite :as sprite]
             [kigengames.kigen-engine.rendering.sprite-renderer :as sr]
-            [kigengames.kigen-engine.rendering.texture :as texture])
-  (:import (org.joml Vector2f Matrix4f Vector4f)))
+            [kigengames.kigen-engine.rendering.texture :as texture]
+            [kigengames.kigen-engine.scene :as scene])
+  (:import (org.joml Matrix4f Vector2f Vector4f)))
 
 (def main-camera (atom (camera/->Camera "camera0"
                                         (g/->Transform (Vector2f. -250.0 0.0) (Vector2f. 1.0 1.0))
@@ -39,10 +40,14 @@
                                                                            (/ y-pos total-height)
                                                                            1.0
                                                                            1.0)
+                                                                nil
                                                                 (g/create-transform (Vector2f. x-pos y-pos) (Vector2f. size-x size-y))
                                                                 (fn [_])
-                                                                (fn [sr _dt]
-                                                                  sr)))
+                                                                (fn [sr dt]
+                                                                  (let [new-sr (update-in sr
+                                                                                          [:transform]
+                                                                                          (fn [t] (.translate t (Vector2f. (- (.x (:position t)) (* 10.0 dt)) 100.0))))]
+                                                                    new-sr))))
                                          (.add-drawable r @sr2))
                                        (recur (inc y))))
                                    (recur (inc x))))))
@@ -60,12 +65,11 @@
 (def scene1 (scene/->Scene 1
                            "bla1"
                            (fn [this]
-                             (let [r (:renderer this)]
-                               (reset! sr0 (sr/create [(Vector2f. 1.0 1.0)
-                                                       (Vector2f. 1.0 0.0)
-                                                       (Vector2f. 0.0 1.0)
-                                                       (Vector2f. 0.0 0.0)]
-                                                      (texture/create "textures/img0.png" (fn [_]) (fn [_]))
+                             (let [r (:renderer this)
+                                   texture0 (texture/create "textures/img0.png" (fn [_]) (fn [_]))
+                                   texture1 (texture/create "textures/img1.png" (fn [_]) (fn [_]))]
+                               (reset! sr0 (sr/create nil
+                                                      (sprite/create texture0)
                                                       (g/create-transform (Vector2f. 100.0 100.0) (Vector2f. 256.0 256.0))
                                                       (fn [_])
                                                       (fn [sr dt]
@@ -73,11 +77,8 @@
                                                                                 [:transform]
                                                                                 (fn [t] (.translate t (Vector2f. (- (.x (:position t)) (* 10.0 dt)) 100.0))))]
                                                           new-sr))))
-                               (reset! sr1 (sr/create [(Vector2f. 1.0 1.0)
-                                                       (Vector2f. 1.0 0.0)
-                                                       (Vector2f. 0.0 1.0)
-                                                       (Vector2f. 0.0 0.0)]
-                                                      (texture/create "textures/img1.png" (fn [_]) (fn [_]))
+                               (reset! sr1 (sr/create nil
+                                                      (sprite/create texture1)
                                                       (g/create-transform (Vector2f. 400.0 100.0) (Vector2f. 256.0 256.0))
                                                       (fn [_])
                                                       (fn [sr dt]

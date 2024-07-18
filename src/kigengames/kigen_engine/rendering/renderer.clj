@@ -15,8 +15,10 @@
           batch (first (filter (fn [item] @(:has-capacity item)) @batches))
           target (:instance comp_target)]
       (when (not= batch nil)
-        (.add-sprite batch target)
-        (reset! added true))
+        (let [target-texture (:texture target)]
+          (when (or (not target-texture) (.has-texture? batch target-texture) (.room-for-more-textures? batch))
+            (.add-sprite batch target)
+            (reset! added true))))
       (when (not @added)
         (let [new-br (br/create max-batch-size)]
           (.start new-br)
@@ -29,7 +31,7 @@
                 (.render item)
                 (let [sprite-list (filter (fn [s] (not (nil? s))) @(:sprites item))]
                   (reduce (fn [acc, _]
-                            (let [sprite-renderer (nth sprite-list acc)
+                            (let [sprite-renderer (nth sprite-list acc) 
                                   new-sprite-renderer (.process sprite-renderer sprite-renderer dt)]
                               (swap! (:sprites item) assoc acc new-sprite-renderer)
                               (.render item))

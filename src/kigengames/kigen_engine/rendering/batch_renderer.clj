@@ -7,7 +7,7 @@
 (def ^:private ^:const color-size 4)
 (def ^:private ^:const tex-coords-size 2)
 (def ^:private ^:const tex-id-size 1)
-
+(def ^:private ^:const textures-size 8)
 (def ^:private ^:const pos-offset 0)
 (def ^:private ^:const color-offset (+ pos-offset (* pos-size Float/BYTES)))
 (def ^:private ^:const tex-coords-offset (+ color-offset (* color-size Float/BYTES)))
@@ -43,17 +43,18 @@
 
 (defn load-vertex-properties
   [index sprites vertices textures]
-  (let [sprite (nth @sprites index)
+  (let [sprite-renderer (nth @sprites index)
+        sprite (:sprite sprite-renderer)
         offset (atom (* 4 index vertex-size))
-        color (:color sprite) 
-        tex-coords (.get-texture-coords sprite)
+        color (:color sprite-renderer) 
+        tex-coords (.get-texture-coords sprite-renderer)
         x-add (atom 1.0)
         y-add (atom 1.0)
         tex-id (atom 0)
-        tex-size (count @textures)] 
-    (when (not= nil (:texture sprite))
+        tex-size (count @textures)]
+    (when (not= nil (get-in sprite [:texture :instance]))
      (loop [i 0]
-       (if (.equals (nth @textures i) (:texture sprite))
+       (if (.equals (nth @textures i) (get-in sprite [:texture :instance]))
          (reset! tex-id (inc i))
          (when (< i tex-size) 
           (recur (inc i))))))
@@ -65,8 +66,8 @@
           (= i 2) (reset! x-add 0.0)
           (= i 3) (reset! y-add 1.0))
         ;; Vertex position
-        (swap! vertices update @offset (fn [_] (+ (.x (get-in sprite [:transform :position])) (* @x-add (.x (get-in sprite [:transform :scale]))))))
-        (swap! vertices update (+ @offset 1) (fn [_] (+ (.y (get-in sprite [:transform :position])) (* @y-add (.y (get-in sprite [:transform :scale]))))))
+        (swap! vertices update @offset (fn [_] (+ (.x (get-in sprite-renderer [:transform :position])) (* @x-add (.x (get-in sprite-renderer [:transform :scale]))))))
+        (swap! vertices update (+ @offset 1) (fn [_] (+ (.y (get-in sprite-renderer [:transform :position])) (* @y-add (.y (get-in sprite-renderer [:transform :scale]))))))
         ;; Colors
         (swap! vertices update (+ @offset 2) (fn [_] (.x color)))
         (swap! vertices update (+ @offset 3) (fn [_] (.y color)))
@@ -84,7 +85,9 @@
 (defprotocol BatchRendererP
   (start [this])
   (add-sprite [this sr])
-  (render [this]))
+  (render [this])
+  (room-for-more-textures? [this])
+  (has-texture? [this texture]))
 
 (defrecord BatchRenderer [max-batch-size sprites number-of-sprites has-capacity vertices textures vao-id vbo-id shader]
   BatchRendererP
@@ -120,13 +123,14 @@
      (swap! sprites update index (fn [_] sr))
      (swap! number-of-sprites inc)
 
-     (when (and (not= nil (:texture sr))
-                (not-any? (fn [t] (.equals t (:texture sr))) @textures))
-       (swap! textures conj (:texture sr)))
+     (when (and (not= nil (get-in sr [:sprite :texture :instance]))
+                (not-any? (fn [t] (.equals t (get-in sr [:sprite :texture :instance]))) @textures))
+       (swap! textures conj (get-in sr [:sprite :texture :instance])))
 
      (load-vertex-properties index sprites vertices textures)
      (when (>= @number-of-sprites max-batch-size)
        (reset! has-capacity false))))
+  
   (render
    [_]
    (reduce (fn [acc, _] 
@@ -167,7 +171,13 @@
            0
            @textures)
 
-   (sp/dettach)))
+   (sp/dettach))
+
+  (room-for-more-textures? [_]
+    (<= (count @textures) textures-size))
+
+  (has-texture? [_ texture]
+    (some (fn [t] (.equals t texture)) @textures)))
 
 (defn create
   [max-batch-size]
