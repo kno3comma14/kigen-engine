@@ -14,6 +14,7 @@
 (def ^:private ^:const tex-id-offset (+ tex-coords-offset (* tex-coords-size Float/BYTES)))
 (def ^:private ^:const vertex-size 9)
 (def ^:private ^:const vertex-size-bytes (* vertex-size Float/BYTES))
+(def data-rebuffed? (atom false))
 
 (defn calculate-buffer-size
   [batch-size]
@@ -128,8 +129,19 @@
        (reset! has-capacity false))))
   (render
    [_]
-   (GL46/glBindBuffer GL46/GL_ARRAY_BUFFER @vbo-id)
-   (GL46/glBufferSubData GL46/GL_ARRAY_BUFFER 0 (float-array @vertices))
+   (reduce (fn [acc, _] 
+             (when (get-in @sprites [acc :is-dirty?]) 
+               (load-vertex-properties acc sprites vertices textures)
+               (swap! sprites update-in [acc :is-dirty?] (fn [_] false))
+               (reset! data-rebuffed? true))
+             (inc acc))
+           0
+           @sprites)
+   
+   (when @data-rebuffed?
+     (GL46/glBindBuffer GL46/GL_ARRAY_BUFFER @vbo-id)
+     (GL46/glBufferSubData GL46/GL_ARRAY_BUFFER 0 (float-array @vertices)))
+   
    (sp/use-shader @shader)
    (sp/upload-matrix4f @shader "uProjection" (.get-projection-matrix @(:camera @w/current-scene)))
    (sp/upload-matrix4f @shader "uView" (.get-view-matrix @(:camera @w/current-scene)))

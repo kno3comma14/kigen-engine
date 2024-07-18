@@ -49,31 +49,43 @@
                            main-camera
                            renderer0))
 
+
+(def sr0 (atom nil))
+(def sr1 (atom nil))
+
+
 (def scene1 (scene/->Scene 1
                            "bla1"
                            (fn [this]
-                             (let [r (:renderer this)
-                                   sr0 (sr/create [(Vector2f. 1.0 1.0)
-                                                   (Vector2f. 1.0 0.0)
-                                                   (Vector2f. 0.0 1.0)
-                                                   (Vector2f. 0.0 0.0)]
-                                                  (texture/create "textures/img0.png" (fn [_]) (fn [_]))
-                                                  (g/create-transform (Vector2f. 100.0 100.0) (Vector2f. 256.0 256.0))
-                                                  (fn [_])
-                                                  (fn [_]))
-                                   sr1 (sr/create [(Vector2f. 1.0 1.0)
-                                                   (Vector2f. 1.0 0.0)
-                                                   (Vector2f. 0.0 1.0)
-                                                   (Vector2f. 0.0 0.0)]
-                                                  (texture/create "textures/img1.png" (fn [_]) (fn [_]))
-                                                  (g/create-transform (Vector2f. 400.0 100.0) (Vector2f. 256.0 256.0))
-                                                  (fn [_])
-                                                  (fn [_]))]
-                               (.add-drawable r (:instance sr1))
-                               (.add-drawable r (:instance sr0))
-                               ))
-                           (fn [this _dt]
                              (let [r (:renderer this)]
-                               (.render r)))
+                               (reset! sr0 (sr/create [(Vector2f. 1.0 1.0)
+                                                       (Vector2f. 1.0 0.0)
+                                                       (Vector2f. 0.0 1.0)
+                                                       (Vector2f. 0.0 0.0)]
+                                                      (texture/create "textures/img0.png" (fn [_]) (fn [_]))
+                                                      (g/create-transform (Vector2f. 100.0 100.0) (Vector2f. 256.0 256.0))
+                                                      (fn [_])
+                                                      (fn [sr dt]
+                                                        (let [new-sr (update-in sr
+                                                                                [:transform]
+                                                                                (fn [t] (.translate t (Vector2f. (- (.x (:position t)) (* 10.0 dt)) 100.0))))]
+                                                          new-sr))))
+                               (reset! sr1 (sr/create [(Vector2f. 1.0 1.0)
+                                                       (Vector2f. 1.0 0.0)
+                                                       (Vector2f. 0.0 1.0)
+                                                       (Vector2f. 0.0 0.0)]
+                                                      (texture/create "textures/img1.png" (fn [_]) (fn [_]))
+                                                      (g/create-transform (Vector2f. 400.0 100.0) (Vector2f. 256.0 256.0))
+                                                      (fn [_])
+                                                      (fn [sr dt]
+                                                        (let [new-sr (update-in sr 
+                                                                               [:transform] 
+                                                                               (fn [t] (.translate t (Vector2f. (+ (.x (:position t)) (* 10.0 dt)) 100.0))))] 
+                                                          new-sr))))
+                               (.add-drawable r @sr0)
+                               (.add-drawable r @sr1)))
+                           (fn [this dt]
+                             (let [r (:renderer this)] 
+                               (.render r dt)))
                            main-camera
                            renderer0))

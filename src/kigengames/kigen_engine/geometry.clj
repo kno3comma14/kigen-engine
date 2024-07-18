@@ -4,7 +4,8 @@
 (defprotocol TransformP
   (validate [this]) 
   (translate [this new-position]) 
-  (change-scale [this new-scale]))
+  (change-scale [this new-scale])
+  (equals? [this other]))
 
 (defrecord Transform [position scale]
   TransformP
@@ -15,7 +16,10 @@
   (translate [this new-position]
     (validate (assoc this :position new-position))) 
   (change-scale [this new-scale]
-    (validate (assoc this :scale new-scale))))
+    (validate (assoc this :scale new-scale)))
+  (equals? [_ other]
+    (and (= position (:position other))
+         (= scale (:scale other)))))
 
 (defn create-transform
   [position scale]
