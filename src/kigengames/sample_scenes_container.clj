@@ -15,6 +15,7 @@
                                         (Matrix4f.))))
 
 (def renderer0 (renderer/create))
+(def sr2 (atom nil))
 
 (def scene0 (scene/->Scene 0
                            "bla0"
@@ -32,20 +33,22 @@
                                      (when (< y 100)
                                        (let [x-pos (+ x-offset (* x size-x) (* padding x))
                                              y-pos (+ y-offset (* y size-y) (* padding y))
-                                             r (:renderer this) 
-                                             sr1 (sr/create (Vector4f. (/ x-pos total-width)
-                                                                       (/ y-pos total-height)
-                                                                       1.0
-                                                                       1.0)
-                                                            (g/create-transform (Vector2f. x-pos y-pos) (Vector2f. size-x size-y))
-                                                            (fn [_])
-                                                            (fn [_]))] 
-                                         (.add-drawable r (:instance sr1))) 
+                                             r (:renderer this)]
+
+                                         (reset! sr2 (sr/create (Vector4f. (/ x-pos total-width)
+                                                                           (/ y-pos total-height)
+                                                                           1.0
+                                                                           1.0)
+                                                                (g/create-transform (Vector2f. x-pos y-pos) (Vector2f. size-x size-y))
+                                                                (fn [_])
+                                                                (fn [sr _dt]
+                                                                  sr)))
+                                         (.add-drawable r @sr2)) 
                                        (recur (inc y)))) 
                                    (recur (inc x))))))
-                           (fn [this _dt]
+                           (fn [this dt]
                              (let [r (:renderer this)] 
-                               (.render r)))
+                               (.render r dt)))
                            main-camera
                            renderer0))
 

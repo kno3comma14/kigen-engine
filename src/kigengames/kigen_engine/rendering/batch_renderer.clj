@@ -45,7 +45,7 @@
   [index sprites vertices textures]
   (let [sprite (nth @sprites index)
         offset (atom (* 4 index vertex-size))
-        color (:color sprite)
+        color (:color sprite) 
         tex-coords (.get-texture-coords sprite)
         x-add (atom 1.0)
         y-add (atom 1.0)
@@ -138,7 +138,7 @@
            0
            @sprites)
    
-   (when @data-rebuffed?
+   (when (or @data-rebuffed? (empty? @textures))
      (GL46/glBindBuffer GL46/GL_ARRAY_BUFFER @vbo-id)
      (GL46/glBufferSubData GL46/GL_ARRAY_BUFFER 0 (float-array @vertices)))
    

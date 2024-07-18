@@ -25,15 +25,17 @@
 
   (render [_ dt]
     (reduce (fn [_, item]
-              (let [sprite-list (filter (fn [s] (not (nil? s))) @(:sprites item))]
-                (reduce (fn [acc, _]
-                          (let [sprite-renderer (nth sprite-list acc)
-                                new-sprite-renderer (.process sprite-renderer sprite-renderer dt)]
-                            (swap! (:sprites item) assoc acc new-sprite-renderer)
-                            (.render item))
-                          (inc acc))
-                        0
-                        sprite-list)))
+              (if (empty? @(:textures item))
+                (.render item)
+                (let [sprite-list (filter (fn [s] (not (nil? s))) @(:sprites item))]
+                  (reduce (fn [acc, _]
+                            (let [sprite-renderer (nth sprite-list acc)
+                                  new-sprite-renderer (.process sprite-renderer sprite-renderer dt)]
+                              (swap! (:sprites item) assoc acc new-sprite-renderer)
+                              (.render item))
+                            (inc acc))
+                          0
+                          sprite-list))))
             nil
             @batches)))
 
