@@ -5,7 +5,8 @@
             [kigengames.kigen-engine.rendering.sprite :as sprite]
             [kigengames.kigen-engine.rendering.sprite-renderer :as sr]
             [kigengames.kigen-engine.rendering.texture :as texture]
-            [kigengames.kigen-engine.scene :as scene])
+            [kigengames.kigen-engine.scene :as scene]
+            [kigengames.kigen-engine.rendering.spritesheet :as ss])
   (:import (org.joml Matrix4f Vector2f Vector4f)))
 
 (def main-camera (atom (camera/->Camera "camera0"
@@ -60,6 +61,8 @@
 
 (def sr0 (atom nil))
 (def sr1 (atom nil))
+(def sr3 (atom nil))
+(def sr4 (atom nil))
 
 
 (def scene1 (scene/->Scene 1
@@ -88,6 +91,27 @@
                                                           new-sr))))
                                (.add-drawable r @sr0)
                                (.add-drawable r @sr1)))
+                           (fn [this dt]
+                             (let [r (:renderer this)]
+                               (.render r dt)))
+                           main-camera
+                           renderer0))
+
+(def scene2 (scene/->Scene 2
+                           "bla2"
+                           (fn [this]
+                             (let [r (:renderer this)
+                                   test-texture (texture/create "textures/kigen-basic-sprites.png" (fn [_]) (fn [_]))
+                                   test-spritesheet (ss/create (:instance test-texture) 32 32 0 40)
+                                   aux-transform (g/create-transform (Vector2f. 100.0 100.0) (Vector2f. 256.0 256.0))
+                                   aux-transform2 (g/create-transform (Vector2f. 400.0 100.0) (Vector2f. 256.0 256.0))
+                                   aux-init-fn (fn [_])
+                                   aux-update-fn (fn [sr _dt] sr)]
+                               
+                               (reset! sr3 (.attach-to-sprite-renderer test-spritesheet aux-transform 0 aux-init-fn aux-update-fn))
+                               (reset! sr4 (.attach-to-sprite-renderer test-spritesheet aux-transform2 1 aux-init-fn aux-update-fn))
+                               (.add-drawable r @sr3)
+                               (.add-drawable r @sr4))) 
                            (fn [this dt]
                              (let [r (:renderer this)]
                                (.render r dt)))

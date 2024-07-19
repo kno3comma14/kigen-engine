@@ -13,20 +13,20 @@
     [_ comp_target]
     (let [added (atom false)
           batch (first (filter (fn [item] @(:has-capacity item)) @batches))
-          target (:instance comp_target)]
+          target (:instance comp_target)] 
       (when (not= batch nil)
-        (let [target-texture (:texture target)]
+        (let [target-texture (get-in target [:sprite :texture])]
           (when (or (not target-texture) (.has-texture? batch target-texture) (.room-for-more-textures? batch))
             (.add-sprite batch target)
             (reset! added true))))
       (when (not @added)
-        (let [new-br (br/create max-batch-size)]
+        (let [new-br (br/create max-batch-size)] 
           (.start new-br)
           (.add-sprite new-br target)
           (swap! batches conj new-br)))))
 
   (render [_ dt]
-    (reduce (fn [_, item]
+    (reduce (fn [_, item] 
               (if (empty? @(:textures item))
                 (.render item)
                 (let [sprite-list (filter (fn [s] (not (nil? s))) @(:sprites item))]

@@ -52,9 +52,9 @@
         y-add (atom 1.0)
         tex-id (atom 0)
         tex-size (count @textures)]
-    (when (not= nil (get-in sprite [:texture :instance]))
+    (when (not= nil (get-in sprite [:texture]))
      (loop [i 0]
-       (if (.equals (nth @textures i) (get-in sprite [:texture :instance]))
+       (if (.equals (nth @textures i) (get-in sprite [:texture]))
          (reset! tex-id (inc i))
          (when (< i tex-size) 
           (recur (inc i))))))
@@ -119,13 +119,13 @@
   
   (add-sprite
    [_ sr]
-   (let [index @number-of-sprites]
+   (let [index @number-of-sprites] 
      (swap! sprites update index (fn [_] sr))
-     (swap! number-of-sprites inc)
-
-     (when (and (not= nil (get-in sr [:sprite :texture :instance]))
-                (not-any? (fn [t] (.equals t (get-in sr [:sprite :texture :instance]))) @textures))
-       (swap! textures conj (get-in sr [:sprite :texture :instance])))
+     (swap! number-of-sprites inc) 
+     
+     (when (and (not= nil (get-in sr [:sprite :texture]))
+                (not-any? (fn [t] (.equals t (get-in sr [:sprite :texture]))) @textures))
+       (swap! textures conj (get-in sr [:sprite :texture]))) 
 
      (load-vertex-properties index sprites vertices textures)
      (when (>= @number-of-sprites max-batch-size)
@@ -140,18 +140,18 @@
                (reset! data-rebuffed? true))
              (inc acc))
            0
-           @sprites)
+           @sprites) 
    
-   (when (or @data-rebuffed? (empty? @textures))
+   (when (or @data-rebuffed? (empty? @textures) (= (count @textures) 1))
      (GL46/glBindBuffer GL46/GL_ARRAY_BUFFER @vbo-id)
      (GL46/glBufferSubData GL46/GL_ARRAY_BUFFER 0 (float-array @vertices)))
    
    (sp/use-shader @shader)
    (sp/upload-matrix4f @shader "uProjection" (.get-projection-matrix @(:camera @w/current-scene)))
-   (sp/upload-matrix4f @shader "uView" (.get-view-matrix @(:camera @w/current-scene)))
+   (sp/upload-matrix4f @shader "uView" (.get-view-matrix @(:camera @w/current-scene))) 
    (reduce (fn [acc, _]
              (GL46/glActiveTexture (+ GL46/GL_TEXTURE0 (+ acc 1))) 
-             (.bind (nth @textures acc))
+             (.bind (or (:instance (nth @textures acc)) (nth @textures acc)))
              (inc acc))
            0
            @textures)
@@ -166,7 +166,7 @@
 
    (reduce (fn [acc, _]
              (GL46/glActiveTexture (+ GL46/GL_TEXTURE0 (inc acc)))
-             (.unbind (nth @textures acc))
+             (.unbind (or (:instance (nth @textures acc)) (nth @textures acc)))
              (inc acc))
            0
            @textures)

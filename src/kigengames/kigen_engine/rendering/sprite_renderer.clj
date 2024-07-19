@@ -28,7 +28,7 @@
                       init-fn
                       update-fn)
     (c/create (->SpriteRenderer color
-                      (spr/create nil) 
+                      sprite 
                       transform
                       init-fn
                       update-fn

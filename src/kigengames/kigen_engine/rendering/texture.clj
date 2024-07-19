@@ -43,20 +43,20 @@
         width (BufferUtils/createIntBuffer 1)
         height (BufferUtils/createIntBuffer 1)
         channels (BufferUtils/createIntBuffer 1)
-        _ (STBImage/stbi_set_flip_vertically_on_load true)
+        _ (STBImage/stbi_set_flip_vertically_on_load true) 
         complete-path (.getPath (io/resource path))
         image (STBImage/stbi_load complete-path width height channels 0)]
     (if (not= image nil)
       (prepare-texture image width height channels)
       (throw (Exception. (str "ERROR: Can't open the target image"))))
     (STBImage/stbi_image_free image)
-    {:path path :texture-id t-id}))
+    {:path path :texture-id t-id :width (float (.get width 0)) :height (float (.get height 0))}))
 
 (defprotocol TextureP
   (bind [this])
   (unbind [this]))
 
-(defrecord Texture [texture-id path]
+(defrecord Texture [texture-id path width height]
   TextureP
   (bind [_]
     (GL46/glBindTexture GL46/GL_TEXTURE_2D texture-id))
@@ -66,5 +66,7 @@
 (defn create [path init-fn update-fn] 
   (let [tx-map (load-texture path)
         tx-id (:texture-id tx-map)
-        tx-instance (->Texture tx-id path)]
+        width (:width tx-map)
+        height (:height tx-map)
+        tx-instance (->Texture tx-id path width height)]
     (component/create tx-instance init-fn update-fn)))
