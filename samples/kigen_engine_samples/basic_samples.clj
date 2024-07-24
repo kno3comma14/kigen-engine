@@ -104,11 +104,15 @@
                                    test-texture (texture/create "textures/kigen-basic-sprites.png" (fn [_]) (fn [_]))
                                    test-spritesheet (ss/create (:instance test-texture) 32 32 0 40)
                                    aux-transform (g/create-transform (Vector2f. 100.0 100.0) (Vector2f. 256.0 256.0))
-                                   aux-transform2 (g/create-transform (Vector2f. 400.0 100.0) (Vector2f. 256.0 256.0))
+                                   aux-transform2 (g/create-transform (Vector2f. 120.0 100.0) (Vector2f. 256.0 256.0))
                                    aux-init-fn (fn [_])
-                                   aux-update-fn (fn [sr _dt] sr)]
+                                   aux-update-fn (fn [sr dt]
+                                                   (let [new-sr (update-in sr
+                                                                           [:transform]
+                                                                           (fn [t] (.translate t (Vector2f. (+ (.x (:position t)) (* 10.0 dt)) 100.0))))] 
+                                                     new-sr))]
                                
-                               (reset! sr3 (.attach-to-sprite-renderer test-spritesheet aux-transform 0 aux-init-fn aux-update-fn))
+                               (reset! sr3 (.attach-to-sprite-renderer test-spritesheet aux-transform 0 aux-init-fn (fn [sr _dt] sr)))
                                (reset! sr4 (.attach-to-sprite-renderer test-spritesheet aux-transform2 1 aux-init-fn aux-update-fn))
                                (.add-drawable r @sr3)
                                (.add-drawable r @sr4))) 

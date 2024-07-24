@@ -46,8 +46,12 @@
   (create-window width height title)
   (GLFW/glfwMakeContextCurrent @_window-entity)
   (GLFW/glfwSwapInterval 1)
-  (GLFW/glfwShowWindow @_window-entity)
-  (GL/createCapabilities)
+  (GLFW/glfwShowWindow @_window-entity) 
+  (GL/createCapabilities) 
+  
+  (GL46/glEnable GL46/GL_BLEND)
+  (GL46/glBlendFunc GL46/GL_ONE GL46/GL_ONE_MINUS_SRC_ALPHA)
+
   (change-scene initial-scene)
   (kl/init)
   (ml/init)
