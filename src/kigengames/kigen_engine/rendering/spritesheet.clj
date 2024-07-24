@@ -13,7 +13,6 @@
     (nth sprite-list index))
   (attach-to-sprite-renderer [_ transform index init-fn update-fn]
     (let [target-sprite (get-sprite _ index)
-          _ (println transform)
           result-renderer (sr/create nil target-sprite transform init-fn update-fn)]
       result-renderer)))
 
