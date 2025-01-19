@@ -73,11 +73,13 @@
         (swap! vertices update (+ @offset 3) (fn [_] (.y color)))
         (swap! vertices update (+ @offset 4) (fn [_] (.z color)))
         (swap! vertices update (+ @offset 5) (fn [_] (.w color)))
-        ;; texture coordinates
-        (swap! vertices update (+ @offset 6) (fn [_] (.x (nth tex-coords i))))
-        (swap! vertices update (+ @offset 7) (fn [_] (.y (nth tex-coords i))))
-        ;; texture id
-        (swap! vertices update (+ @offset 8) (fn [_] @tex-id))
+        ;; If texture
+        (when (not= nil (get-in sprite [:texture]))
+          ;; texture coordinates
+          (swap! vertices update (+ @offset 6) (fn [_] (.x (nth tex-coords i))))
+          (swap! vertices update (+ @offset 7) (fn [_] (.y (nth tex-coords i))))
+          ;; texture id
+          (swap! vertices update (+ @offset 8) (fn [_] @tex-id)))
 
         (reset! offset (+ @offset vertex-size))
         (recur (inc i))))))

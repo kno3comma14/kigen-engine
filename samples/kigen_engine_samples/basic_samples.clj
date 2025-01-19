@@ -17,6 +17,10 @@
                                         (Matrix4f.))))
 
 (def renderer0 (renderer/create))
+(def sr0 (atom nil))
+(def sr1 (atom nil))
+(def sr3 (atom nil))
+(def sr4 (atom nil))
 (def sr2 (atom nil))
 
 (def scene0 (scene/->Scene 0
@@ -57,12 +61,6 @@
                                (.render r dt)))
                            main-camera
                            renderer0))
-
-
-(def sr0 (atom nil))
-(def sr1 (atom nil))
-(def sr3 (atom nil))
-(def sr4 (atom nil))
 
 
 (def scene1 (scene/->Scene 1
