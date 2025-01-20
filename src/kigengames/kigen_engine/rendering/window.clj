@@ -1,10 +1,10 @@
-(ns kigengames.kigen-engine.window
+(ns kigengames.kigen-engine.rendering.window
   (:import (org.lwjgl.glfw GLFW GLFWErrorCallback Callbacks)
            (org.lwjgl.opengl GL GL46))
   (:require [taoensso.timbre :as timbre :refer [warn]]
-            [kigengames.kigen-engine.keyboard-input-event-listener :as kl]
-            [kigengames.kigen-engine.mouse-input-event-listener :as ml] 
-            [kigengames.kigen-engine.scene :as scene]))
+            [kigengames.kigen-engine.io.keyboard-input-event-listener :as kl]
+            [kigengames.kigen-engine.io.mouse-input-event-listener :as ml]
+            [kigengames.kigen-engine.rendering.scene :as scene]))
 
 (defonce _window-entity (atom nil))
 
@@ -14,7 +14,7 @@
   [width height title]
   (if @_window-entity
     (warn "Only one instance of GLFW window can be created.")
-    (let [window (GLFW/glfwCreateWindow width height title 0 0)] 
+    (let [window (GLFW/glfwCreateWindow width height title 0 0)]
       (if (zero? window)
         (throw (RuntimeException. "Failed to create the GLFW window"))
         (reset! _window-entity window)))))
@@ -46,11 +46,14 @@
   (create-window width height title)
   (GLFW/glfwMakeContextCurrent @_window-entity)
   (GLFW/glfwSwapInterval 1)
-  (GLFW/glfwShowWindow @_window-entity) 
-  (GL/createCapabilities) 
-  
+  (GLFW/glfwShowWindow @_window-entity)
+  (GL/createCapabilities)
+
   (GL46/glEnable GL46/GL_BLEND)
   (GL46/glBlendFunc GL46/GL_ONE GL46/GL_ONE_MINUS_SRC_ALPHA)
+  (GL46/glBlendEquationSeparate GL46/GL_FUNC_ADD GL46/GL_FUNC_ADD)
+  (GL46/glBlendFuncSeparate GL46/GL_ONE GL46/GL_ONE_MINUS_SRC_ALPHA GL46/GL_ONE GL46/GL_ONE_MINUS_SRC_ALPHA)
+  
 
   (change-scene initial-scene)
   (kl/init)
@@ -60,6 +63,7 @@
   (GLFW/glfwSetMouseButtonCallback @_window-entity ml/mouse-button-callback)
   (GLFW/glfwSetCursorPosCallback @_window-entity ml/mouse-position-callback)
   (GLFW/glfwSetScrollCallback @_window-entity ml/mouse-scroll-callback))
+
 
 (defn- draw [dt]
   (GLFW/glfwPollEvents)

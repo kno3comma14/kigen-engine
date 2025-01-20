@@ -1,4 +1,4 @@
-(ns kigengames.kigen-engine.camera
+(ns kigengames.kigen-engine.rendering.camera
   (:require [kigengames.kigen-engine.data.component :as component])
   (:import (org.joml  Vector3f)))
 

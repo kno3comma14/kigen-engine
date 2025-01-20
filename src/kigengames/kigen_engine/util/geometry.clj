@@ -1,4 +1,4 @@
-(ns kigengames.kigen-engine.geometry
+(ns kigengames.kigen-engine.util.geometry
   (:require [kigengames.kigen-engine.data.validation :as v]))
 
 (defprotocol TransformP

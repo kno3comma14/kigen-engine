@@ -1,4 +1,4 @@
-(ns kigengames.kigen-engine.scene)
+(ns kigengames.kigen-engine.rendering.scene)
 
 (defprotocol SceneP
   (init [this])
