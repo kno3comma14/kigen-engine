@@ -7,7 +7,7 @@
             [kigengames.kigen-engine.rendering.texture :as texture]
             [kigengames.kigen-engine.scene :as scene]
             [kigengames.kigen-engine.rendering.spritesheet :as ss])
-  (:import (org.joml Matrix4f Vector2f Vector4f)))
+  (:import (org.joml Matrix4f Vector2f Vector4f Vector2i)))
 
 (def main-camera (atom (camera/->Camera "camera0"
                                         (g/->Transform (Vector2f. -250.0 0.0) (Vector2f. 1.0 1.0))
@@ -101,8 +101,8 @@
                              (let [r (:renderer this)
                                    test-texture (texture/create "textures/kigen-basic-sprites.png" (fn [_]) (fn [_]))
                                    test-spritesheet (ss/create (:instance test-texture) 32 32 0 40)
-                                   aux-transform (g/create-transform (Vector2f. 100.0 100.0) (Vector2f. 256.0 256.0))
-                                   aux-transform2 (g/create-transform (Vector2f. 120.0 100.0) (Vector2f. 256.0 256.0))
+                                   aux-transform (g/create-transform (Vector2i. 100 100) (Vector2f. 256.0 256.0))
+                                   aux-transform2 (g/create-transform (Vector2i. 120 100) (Vector2f. 256.0 256.0))
                                    aux-init-fn (fn [_])
                                    aux-update-fn (fn [sr dt]
                                                    (let [new-sr (update-in sr

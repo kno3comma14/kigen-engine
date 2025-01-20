@@ -7,8 +7,8 @@
 
 (defn- set-texture-default-parameters 
   []
-  (GL46/glTexParameteri GL46/GL_TEXTURE_2D GL46/GL_TEXTURE_WRAP_S GL46/GL_REPEAT)
-  (GL46/glTexParameteri GL46/GL_TEXTURE_2D GL46/GL_TEXTURE_WRAP_T GL46/GL_REPEAT)
+  (GL46/glTexParameteri GL46/GL_TEXTURE_2D GL46/GL_TEXTURE_WRAP_S GL46/GL_CLAMP_TO_EDGE)
+  (GL46/glTexParameteri GL46/GL_TEXTURE_2D GL46/GL_TEXTURE_WRAP_T GL46/GL_CLAMP_TO_EDGE)
   (GL46/glTexParameteri GL46/GL_TEXTURE_2D GL46/GL_TEXTURE_MIN_FILTER GL46/GL_NEAREST)
   (GL46/glTexParameteri GL46/GL_TEXTURE_2D GL46/GL_TEXTURE_MAG_FILTER GL46/GL_NEAREST))
 
@@ -33,7 +33,8 @@
                                                GL46/GL_RGBA
                                                GL46/GL_UNSIGNED_BYTE
                                                image)
-    :else (Exception. (str "ERROR: Can't find the number of channels."))))
+    :else (Exception. (str "ERROR: Can't find the number of channels.")))
+  (GL46/glGenerateMipmap GL46/GL_TEXTURE_2D))
 
 (defn- load-texture 
   [path]

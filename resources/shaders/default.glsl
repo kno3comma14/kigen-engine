@@ -12,12 +12,12 @@ out vec4 fColor;
 out vec2 fTexCoords;
 out float fTexId;
 
-
 void main()
 {
     fColor = aColor;
     fTexCoords = aTexCoords;
     fTexId = aTexId;
+
     gl_Position = uProjection * uView * vec4(aPos, 1.0);
 }
 
@@ -36,10 +36,40 @@ void main()
 {
     if (fTexId > 0) {
         int id = int(fTexId);
-        color = fColor * texture(uTextures[id], fTexCoords);
-        //color = vec4(fTexCoords, 0, 1);
+        vec4 auxColor = fColor * texture(uTextures[id], fTexCoords);
+        if (auxColor.a == 0.0) {
+            discard;
+        } else {
+            color = fColor * texture(uTextures[id], fTexCoords);
+        }
+        // AMD NOT TESTED YET
+        // switch (id) {
+        //     case 0:
+        //         color = fColor * texture(uTextures[0], fTexCoords);
+        //     break;
+        //     case 1:
+        //         color = fColor * texture(uTextures[1], fTexCoords);
+        //     break;
+        //     case 2:
+        //         color = fColor * texture(uTextures[2], fTexCoords);
+        //     break;
+        //     case 3:
+        //         color = fColor * texture(uTextures[3], fTexCoords);
+        //     break;
+        //     case 4:
+        //         color = fColor * texture(uTextures[4], fTexCoords);
+        //     break;
+        //     case 5:
+        //         color = fColor * texture(uTextures[5], fTexCoords);
+        //     break;
+        //     case 6:
+        //         color = fColor * texture(uTextures[6], fTexCoords);
+        //     break;
+        //     case 7:
+        //         color = fColor * texture(uTextures[7], fTexCoords);
+        //     break;
+        // }
     } else {
         color = fColor;
     }
-    
 }

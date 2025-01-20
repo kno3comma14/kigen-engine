@@ -5,4 +5,4 @@
 
 (defn -main
   [& _args]
-  (w/run 1920 1080 "Sup!!!" bs/scene2))
+  (w/run 1920 1080 "Sup!!!" bs/scene0))

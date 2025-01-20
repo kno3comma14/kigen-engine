@@ -1,7 +1,7 @@
 (ns kigengames.kigen-engine.rendering.renderer
   (:require [kigengames.kigen-engine.rendering.batch-renderer :as br]))
 
-(def ^:private ^:const max-batch-size 1000)
+(def ^:private ^:const max-batch-size 4096)
 
 (defprotocol RendererP
   (add-drawable [this target])
