@@ -1,6 +1,6 @@
 (ns kigengames.kigen-engine.rendering.batch-renderer
   (:require [kigengames.kigen-engine.rendering.shader-processor :as sp]
-            [kigengames.kigen-engine.window :as w])
+            [kigengames.kigen-engine.rendering.window :as w])
   (:import (org.lwjgl.opengl GL46)))
 
 (def ^:private ^:const pos-size 2)

@@ -1,10 +1,10 @@
-(ns kigengames.kigen-engine.window
+(ns kigengames.kigen-engine.rendering.window
   (:import (org.lwjgl.glfw GLFW GLFWErrorCallback Callbacks)
            (org.lwjgl.opengl GL GL46))
   (:require [taoensso.timbre :as timbre :refer [warn]]
-            [kigengames.kigen-engine.keyboard-input-event-listener :as kl]
-            [kigengames.kigen-engine.mouse-input-event-listener :as ml]
-            [kigengames.kigen-engine.scene :as scene]))
+            [kigengames.kigen-engine.io.keyboard-input-event-listener :as kl]
+            [kigengames.kigen-engine.io.mouse-input-event-listener :as ml]
+            [kigengames.kigen-engine.rendering.scene :as scene]))
 
 (defonce _window-entity (atom nil))
 

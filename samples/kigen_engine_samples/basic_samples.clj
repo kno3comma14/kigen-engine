@@ -1,11 +1,11 @@
 (ns kigen-engine-samples.basic-samples
-  (:require [kigengames.kigen-engine.camera :as camera]
-            [kigengames.kigen-engine.geometry :as g]
+  (:require [kigengames.kigen-engine.rendering.camera :as camera]
+            [kigengames.kigen-engine.util.geometry :as g]
             [kigengames.kigen-engine.rendering.renderer :as renderer]
             [kigengames.kigen-engine.rendering.sprite :as sprite]
             [kigengames.kigen-engine.rendering.sprite-renderer :as sr]
             [kigengames.kigen-engine.rendering.texture :as texture]
-            [kigengames.kigen-engine.scene :as scene]
+            [kigengames.kigen-engine.rendering.scene :as scene]
             [kigengames.kigen-engine.rendering.spritesheet :as ss])
   (:import (org.joml Matrix4f Vector2f Vector4f Vector2i)))
 
@@ -24,7 +24,7 @@
 (def sr2 (atom nil))
 
 (def scene0 (scene/->Scene 0
-                           "bla0"
+                           "Sample 0"
                            (fn [this]
                              (let [x-offset 10.0
                                    y-offset 10.0
@@ -64,7 +64,7 @@
 
 
 (def scene1 (scene/->Scene 1
-                           "bla1"
+                           "Sample 1"
                            (fn [this]
                              (let [r (:renderer this)
                                    texture0 (texture/create "textures/img0.png" (fn [_]) (fn [_]))
@@ -96,7 +96,7 @@
                            renderer0))
 
 (def scene2 (scene/->Scene 2
-                           "bla2"
+                           "Sample 2"
                            (fn [this]
                              (let [r (:renderer this)
                                    test-texture (texture/create "textures/kigen-basic-sprites.png" (fn [_]) (fn [_]))
@@ -111,7 +111,7 @@
                                                      new-sr))]
                                
                                (reset! sr3 (.attach-to-sprite-renderer test-spritesheet aux-transform 0 aux-init-fn (fn [sr _dt] sr)))
-                               (reset! sr4 (.attach-to-sprite-renderer test-spritesheet aux-transform2 1 aux-init-fn aux-update-fn))
+                               (reset! sr4 (.attach-to-sprite-renderer test-spritesheet aux-transform2 22 aux-init-fn aux-update-fn))
                                (.add-drawable r @sr3)
                                (.add-drawable r @sr4))) 
                            (fn [this dt]

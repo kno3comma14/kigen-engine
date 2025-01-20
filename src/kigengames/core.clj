@@ -1,6 +1,6 @@
 (ns kigengames.core
   (:gen-class)
-  (:require [kigengames.kigen-engine.window :as w] 
+  (:require [kigengames.kigen-engine.rendering.window :as w] 
             [kigen-engine-samples.basic-samples :as bs]))
 
 (defn -main
