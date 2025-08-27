@@ -110,10 +110,10 @@
                                                                            (fn [t] (.translate t (Vector2f. (+ (.x (:position t)) (* 10.0 dt)) 100.0))))] 
                                                      new-sr))]
                                
-                               (reset! sr3 (.attach-to-sprite-renderer test-spritesheet aux-transform 0 aux-init-fn (fn [sr _dt] sr)))
-                               (reset! sr4 (.attach-to-sprite-renderer test-spritesheet aux-transform2 22 aux-init-fn aux-update-fn))
-                               (.add-drawable r @sr3)
-                               (.add-drawable r @sr4))) 
+                               (reset! sr3 (.attach-to-sprite-renderer test-spritesheet aux-transform 9 aux-init-fn (fn [sr _dt] sr)))
+                               (reset! sr4 (.attach-to-sprite-renderer test-spritesheet aux-transform2 25 aux-init-fn aux-update-fn))
+                               (.add-drawable r @sr4)
+                               (.add-drawable r @sr3))) 
                            (fn [this dt]
                              (let [r (:renderer this)]
                                (.render r dt)))
